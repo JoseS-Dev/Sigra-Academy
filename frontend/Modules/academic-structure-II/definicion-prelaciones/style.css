@@ -38,6 +38,22 @@ body {
 
 .header-left, .header-right { display: flex; align-items: center; gap: 2rem; }
 .logo { font-weight: 800; font-size: 1.25rem; color: var(--primary-blue); display: flex; align-items: center; gap: 8px; }
+/* Logo de imagen */
+.logo-img {
+    height: 40px; /* Ajusta este valor según sea necesario */
+    width: auto;
+    object-fit: contain;
+}
+
+/* Texto junto al logo */
+.logo-text {
+    display: inline-block;
+    font-weight: 800;
+    font-size: 1.25rem;
+    color: var(--primary-blue);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
 .nav-links a { text-decoration: none; color: var(--text-gray); font-weight: 500; font-size: 0.95rem; margin-right: 1.5rem; padding-bottom: 20px; border-bottom: 2px solid transparent; }
 .nav-links a.active { color: var(--primary-blue); border-color: var(--primary-blue); }
 .search-bar { background: #f3f4f6; padding: 0.5rem 1rem; border-radius: 99px; display: flex; align-items: center; color: var(--text-gray); }
