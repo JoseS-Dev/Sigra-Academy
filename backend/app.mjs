@@ -36,7 +36,7 @@ app.get('/test/users', async (req, res) => {
         console.error('Test route error:', error)
         return res.status(500).json({ message: 'Internal server error' })
     }
-})
+});
 
 // Montamos el servidor
 app.listen(SETTINGS.PORT, () => {

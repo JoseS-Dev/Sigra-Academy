@@ -1,11 +1,17 @@
 import express from 'express'
-import { getUser, getUserByName, getUserByEmail, getUserRole, getAllUsers } from './control.controller.mjs'
+import { getUser, getUserByName, getUserByEmail, getUserRole, getAllUsers, registerUser, loginUser } from './control.controller.mjs'
 import { validateGetUser, validateGetUserName, validateGetUserEmail, validateGetRole } from './control.schema.mjs'
 
 const router = express.Router()
 
 // GET /users -> devuelve lista de usuarios (first_name, role_id, last_name, mail, is_active)
 router.get('/users', getAllUsers)
+
+// POST /users/login -> login por email + password
+router.post('/users/login', loginUser)
+
+// POST /users -> registrar usuario
+router.post('/users', registerUser)
 
 // GET /users/:id  -> devuelve usuario por user_id
 router.get('/users/:id', validateGetUser, getUser)
