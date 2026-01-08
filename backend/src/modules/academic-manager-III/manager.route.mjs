@@ -6,6 +6,7 @@ const router = express.Router()
 // ===== RUTAS DE CURSOS =====
 router.get('/courses/:studentId', courseController.getCoursesByStudent)
 router.get('/courses/:assignmentId/detail', courseController.getCourseDetail)
+router.get('/courses/:assignmentId/activities', courseController.getActivitiesByAssignment);
 router.post('/courses', courseController.createCourse)
 
 // ===== RUTAS DE HORARIOS =====
