@@ -1,6 +1,7 @@
 // Importar conexión a la base de datos
 import { db } from '../../../database/db.database.mjs'
-// import { connection } from '../../../database/connection.mjs'
+
+// Modelo que interactua con la tabla teacher_assignments (cursos asignados a profesores)
 
 // Obtener cursos de un estudiante
 export const getCoursesByStudentId = async (studentId) => {
