@@ -7,9 +7,7 @@ export class TeacherAssignmentModel {
         if(!studentId) return {error: 'El ID del estudiante es requerido'};
         // Se verifica que el estudiante exista
         const [existingStudent] = await db.query(
-            `SELECT u.*, r.role_name FROM users u
-            JOIN roles r ON u.role_id = r.role_id
-            WHERE u.user_id = ? AND r.role_name = 'student'`,
+            `SELECT * FROM users WHERE user_id = ?`,
             [studentId]
         );
         if(existingStudent.length === 0) return {error: 'Estudiante no encontrado'};
@@ -184,7 +182,7 @@ export class TeacherAssignmentModel {
     // Método para actualizar una asignación por su ID
     static async updateAssignmentByID(assignmentId, data){
         if(!assignmentId || !data) return {error: 'El ID de la asignación y los datos son requeridos'};
-        const allowedFields = ['teacher_user_id'];
+        const allowedFields = ['teacher_user_id', 'subject_id', 'section_id'];
         const fieldsToupdate = {};
         for(const field of allowedFields){
             if(data[field] !== undefined){

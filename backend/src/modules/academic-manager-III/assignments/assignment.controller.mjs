@@ -96,7 +96,7 @@ export class AssignemtController {
                     details: validation.error
                 });
             }
-            const result = await this.assignmentModel.createAssignment(validation.data);
+            const result = await this.assignmentModel.createAssignement(validation.data);
             if(result.error) return  res.status(400).json({error: result.error});
             return res.status(201).json({
                 message: result.message,
@@ -119,7 +119,7 @@ export class AssignemtController {
                     details: validation.error
                 });
             }
-            const result = await this.assignmentModel.updateAssignment(assignmentId, validation.data);
+            const result = await this.assignmentModel.updateAssignmentByID(assignmentId, validation.data);
             if(result.error) return  res.status(400).json({error: result.error});
             return res.status(200).json({
                 message: result.message,
@@ -135,7 +135,7 @@ export class AssignemtController {
     deleteAssignment = async (req, res) => {
         const { assignmentId } = req.params;
         try{
-            const result = await this.assignmentModel.deleteAssignment(assignmentId);
+            const result = await this.assignmentModel.deleteAssignmentByID(assignmentId);
             if(result.error) return  res.status(400).json({error: result.error});
             return res.status(200).json({
                 message: result.message

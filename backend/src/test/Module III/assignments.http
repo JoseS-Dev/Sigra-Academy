@@ -1,0 +1,37 @@
+### Ruta para obtener todas las asignaciones académicas
+GET http://localhost:5200/api/assignments/student/3/courses
+
+### Ruta para obtener cursos asignados a una seccion
+GET http://localhost:5200/api/assignments/section/3/courses
+
+### Ruta para obtener detalles de un curso asigando
+GET http://localhost:5200/api/assignments/course/1
+
+### Ruta para obtener todas las actividades de un curso asignado
+GET http://localhost:5200/api/assignments/assignment/2/activities
+
+### Ruta para obtener todas las personas relacionadas a un curso asignado
+GET http://localhost:5200/api/assignments/assignment/1/people
+
+### Ruta para crear una nueva asignación académica
+POST http://localhost:5200/api/assignments/create
+Content-Type: application/json
+
+{
+    "teacher_user_id": 2,
+    "subject_id": 1,
+    "section_id": 3
+}
+
+### Ruta para actualizar una asignación académica
+PATCH http://localhost:5200/api/assignments/update/1
+Content-Type: application/json
+
+{
+    "teacher_user_id": 2,
+    "subject_id": 1,
+    "section_id": 4
+}
+
+### Ruta para eliminar una asignación académica
+DELETE http://localhost:5200/api/assignments/delete/11

@@ -9,7 +9,7 @@ const controller = new SchedulesController({ ModelSchedules: SchedulesModel });
 // Obtener horarios de una sección
 router.get('/section/:sectionId', controller.getScheduleBySectionId);
 // Obtener un horario por su ID
-router.get('/get/:scheduleId', controller.getScheduleById);
+router.get('/schedule/:scheduleId', controller.getScheduleById);
 // Crear un nuevo horario
 router.post('/create', controller.createSchedule);
 // Actualizar un horario

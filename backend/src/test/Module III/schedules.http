@@ -1,0 +1,28 @@
+### Ruta para obtener los horarios de una seccion
+GET http://localhost:5200/api/schedules/section/1
+
+### Ruta para obtener un horario por su ID
+GET http://localhost:5200/api/schedules/schedule/1
+
+### Ruta para crear un nuevo horario
+POST http://localhost:5200/api/schedules/create
+Content-Type: application/json
+
+{
+    "assignment_id": 6,
+    "day_of_week": "Lunes",
+    "start_time": "08:00",
+    "end_time": "09:00",
+    "classroom": "A115"
+}
+
+### Ruta para actualizar un horario
+PATCH http://localhost:5200/api/schedules/update/11
+Content-Type: application/json
+
+{
+    "classroom": "B202"
+}
+
+### Ruta para eliminar un horario
+DELETE http://localhost:5200/api/schedules/delete/11
