@@ -177,6 +177,15 @@ CREATE TABLE course_resources (
     FOREIGN KEY (assignment_id) REFERENCES teacher_assignments(assignment_id) ON DELETE CASCADE
 );
 
+-- Asistencia de Estudiantes
+CREATE TABLE course_access_log(
+    access_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_user_id INT NOT NULL,
+    assignment_id INT NOT NULL,
+    access_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (assignment_id) REFERENCES teacher_assignments(assignment_id) ON DELETE CASCADE
+);
 -- ==========================================
 -- MODULO 5: CALIFICACIONES
 -- ==========================================

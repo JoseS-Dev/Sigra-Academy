@@ -16,6 +16,7 @@ import { ActivitiesRoute } from "../../modules/teaching-manager-IV/activities/ac
 import { SubmissionRoute } from "../../modules/teaching-manager-IV/submissions/submission.route.mjs";
 import { ResourceRoute } from "../../modules/teaching-manager-IV/courseResources/resources.route.mjs";
 import { EnrollmentRouter } from "../../modules/academic-structure-II/enrollments/enrollment.route.mjs";
+import { AssistanceRouter } from "../../modules/teaching-manager-IV/assistance/assistance.route.mjs";
 
 const router = Router();
 
@@ -47,6 +48,7 @@ export const ListRoutes = {
     activities: {
         activity: router.use(`${SETTINGS.BASE_PATH}/activities`, ActivitiesRoute),
         submissions: router.use(`${SETTINGS.BASE_PATH}/submissions`, SubmissionRoute),
-        resources: router.use(`${SETTINGS.BASE_PATH}/resources`, ResourceRoute)
+        resources: router.use(`${SETTINGS.BASE_PATH}/resources`, ResourceRoute),
+        assistance: router.use(`${SETTINGS.BASE_PATH}/assistance`, AssistanceRouter)
     }
 }
