@@ -1,0 +1,41 @@
+### Ruta para obtener todas las entregas de una actividad
+GET http://localhost:5200/api/submissions/activities/1/submissions
+
+### Ruta para obtener una entrega específica por su ID
+GET http://localhost:5200/api/submissions/submission/1
+
+### Ruta para obtener todas las entregas de un estudiante
+GET http://localhost:5200/api/submissions/students/3/submissions
+
+### Ruta para crear una nueva entrega
+POST http://localhost:5200/api/submissions/create
+Content-Type: multipart/form-data; boundary=--CustomBoundary
+
+----CustomBoundary
+Content-Disposition: form-data; name="activity_id"
+
+2
+----CustomBoundary
+Content-Disposition: form-data; name="student_user_id"
+
+3
+----CustomBoundary
+Content-Disposition: form-data; name="comments"
+
+Esta es mi entrega.
+----CustomBoundary
+Content-Disposition: form-data; name="file_path"; filename="entrega.txt"
+
+./uploads/entrega.txt
+----CustomBoundary----
+
+### Ruta para actualizar una entrega existente
+PATCH http://localhost:5200/api/submissions/update/11
+Content-Type: application/json
+
+{
+    "comments": "Entrega actualizada con correcciones."
+}
+
+### Ruta para eliminar una entrega
+DELETE http://localhost:5200/api/submissions/delete/13

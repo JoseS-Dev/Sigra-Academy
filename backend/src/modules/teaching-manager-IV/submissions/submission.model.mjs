@@ -1,5 +1,5 @@
 import { db } from "../../../../database/db.database.mjs";
-
+import fs from 'fs';
 // Modelo que interactúa con la tabla submissions de la base de datos
 export class SubmissionModel {
     // Método para obtener todas las entregas de una actividad especifica
@@ -34,10 +34,11 @@ export class SubmissionModel {
         if(!submissionId) return {error: 'El ID de la entrega es requerido'};
         const [submission] = await db.query(
             `SELECT sub.submission_id, act.title, CONCAT(u.first_name, ' ', u.last_name) AS student_name,
-            sub.file_path, sub.submission_date, sub.comments, sec.section_name FROM submissions sub
+            sub.file_path, sub.submission_date, sub.comments, sec.section_name, g.grade_name FROM submissions sub
             JOIN activities act ON sub.activity_id = act.activity_id
             JOIN teacher_assignments ta ON act.assignment_id = ta.assignment_id
             JOIN sections sec ON ta.section_id = sec.section_id
+            JOIN grades g ON sec.grade_id = g.grade_id
             JOIN users u ON sub.student_user_id = u.user_id
             WHERE sub.submission_id = ?`,
             [submissionId]
@@ -61,10 +62,11 @@ export class SubmissionModel {
         if(existingUser.length === 0) return {error: 'El estudiante no existe'};
         // Si existe, se obtienen las entregas asociadas
         const [submissions] = await db.query(
-            `SELECT sub.*, act.title, sec.section_name FROM submissions sub
+            `SELECT sub.*, act.title, sec.section_name, g.grade_name FROM submissions sub
             JOIN activities act ON sub.activity_id = act.activity_id
             JOIN teacher_assignments ta ON act.assignment_id = ta.assignment_id
             JOIN sections sec ON ta.section_id = sec.section_id
+            JOIN grades g ON sec.grade_id = g.grade_id
             WHERE sub.student_user_id = ?`,
             [studentUserId]
         );
@@ -76,7 +78,7 @@ export class SubmissionModel {
     }
 
     // Método para crear una nueva entrega
-    static async createSubmission({data}){
+    static async createSubmission(data){
         const {activity_id, student_user_id, ...rest} = data;
         // Se verifica si existe la actividad
         const [existingActivity] = await db.query(
@@ -94,9 +96,9 @@ export class SubmissionModel {
         }
         // Si existen, se crea la nueva entrega
         const [result] = await db.query(
-            `INSERT INTO submissions (activity_id, student_user_id, file_path, submission_date, comments)
-            VALUES (?, ?, ?, ?, ?)`,
-            [activity_id, student_user_id, rest.file_path, rest.submission_date, rest.comments || null]
+            `INSERT INTO submissions (activity_id, student_user_id, file_path, comments)
+            VALUES (?, ?, ?, ?)`,
+            [activity_id, student_user_id, rest.file_path, rest.comments || null]
         );
         if(result.affectedRows === 0) return {error: 'No se pudo crear la entrega'};
         // Se obtiene la entrega creada
@@ -114,7 +116,7 @@ export class SubmissionModel {
     // Método para actualizar una entrega existente
     static async updateSubmission(submissionId, data){
         if(!submissionId || !data) return {error: 'El ID de la entrega y los datos son requeridos'};
-        const allowedFields = ['file_path', 'submission_date', 'comments'];
+        const allowedFields = ['file_path', 'comments'];
         const updatetoField = {};
         for(const field of allowedFields){
             if(data[field] !== undefined){
@@ -149,7 +151,6 @@ export class SubmissionModel {
         );
         return {
             message: 'Entrega actualizada exitosamente',
-            submission: submission[0]
         }
     }
 
@@ -168,6 +169,14 @@ export class SubmissionModel {
             [submissionId]
         );
         if(result.affectedRows === 0) return {error: 'No se pudo eliminar la entrega'};
+        // A su vez se borra el archivo que se creo en la carpeta uploads/submissions
+        
+        const filePath = existingSubmission[0].file_path;
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error al eliminar el archivo:', err);
+            }
+        });
         return {
             message: 'Entrega eliminada exitosamente'
         }

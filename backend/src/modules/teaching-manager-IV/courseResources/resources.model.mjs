@@ -1,5 +1,5 @@
 import { db } from "../../../../database/db.database.mjs";
-
+import fs from 'fs';
 // Modelo que interactúa con la tabla course_resources de la base de datos
 export class ResourceModel {
     // Método para obtener todos los recursos de una asignación especifico
@@ -60,9 +60,9 @@ export class ResourceModel {
         if(existingResource.length > 0) return {error: 'Ya existe un recurso con el mismo título en esta asignación'};
         // Si no existe, se crea el recurso
         const [result] = await db.query(
-            `INSERT INTO course_resources (assignment_id, title, description, resource_type, file_path)
-            VALUES (?, ?, ?, ?, ?)`,
-            [assignment_id, rest.title, rest.description, rest.resource_type, rest.file_path]
+            `INSERT INTO course_resources (assignment_id, title, resource_type, file_path_or_url)
+            VALUES (?, ?, ?, ?)`,
+            [assignment_id, rest.title, rest.resource_type, rest.file_path_or_url]
         );
         if(result.affectedRows === 0) return {error: 'No se pudo crear el recurso'};
         // Se obtiene el recurso recién creado
@@ -80,7 +80,7 @@ export class ResourceModel {
     // Método para actualizar un recurso existente
     static async updateResource(resourceId, data){
         if(!resourceId || !data) return {error: 'El ID del recurso y los datos son requeridos'};
-        const allowedFields = ['title', 'resource_type', 'file_path'];
+        const allowedFields = ['title', 'resource_type', 'file_path_or_url'];
         const updatedToFields = {};
         for(const field of allowedFields){
             if(data[field] !== undefined){
@@ -104,7 +104,7 @@ export class ResourceModel {
         });
         values.push(resourceId); // Para el WHERE
         const [result] = await db.query(
-            `UPDATE course_resources SET ${fields.join(', ')} WHERE resource_id = ?`,
+            `UPDATE course_resources SET ${fields.join(', ')}, uploaded_at = NOW() WHERE resource_id = ?`,
             values
         );
         if(result.affectedRows === 0) return {error: 'No se pudo actualizar el recurso'};
@@ -134,6 +134,13 @@ export class ResourceModel {
             [resourceId]
         );
         if(result.affectedRows === 0) return {error: 'No se pudo eliminar el recurso'};
+        // A su vez se borra el archivo que se creo en la carpeta uploads/resources
+        const filePath = existingResource[0].file_path_or_url;
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                console.error('Error al eliminar el archivo:', err);
+            }
+        })
         return {
             message: 'Recurso eliminado exitosamente'
         }

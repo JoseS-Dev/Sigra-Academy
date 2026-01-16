@@ -32,7 +32,7 @@ export class ActivitiesModel {
     static async getActivityById(activityId){
         if(!activityId) return {error: 'El ID de la actividad es requerido'};
         const [activity] = await db.query(
-            `SELECT act.*, s.subject_name, sec.section_name, res.title, res.resource_type
+            `SELECT act.*, s.subject_name, sec.section_name, res.title, res.resource_type, res.file_path_or_url
             FROM activities act JOIN teacher_assignments ta ON act.assignment_id = ta.assignment_id
             JOIN subjects s ON ta.subject_id = s.subject_id
             JOIN sections sec ON ta.section_id = sec.section_id
@@ -63,8 +63,7 @@ export class ActivitiesModel {
         );
         if(updatedActivity.affectedRows === 0) return {error: 'No se pudo actualizar la visibilidad de la actividad'};
         return {
-            message: `Se ha ${isVisible ? 'mostrado' : 'ocultado'} la actividad exitosamente`,
-            activity: existingActivity[0]
+            message: `Se ha ${isVisible ? 'mostrado' : 'ocultado'} la actividad exitosamente`
         }
     }
 
@@ -80,7 +79,7 @@ export class ActivitiesModel {
         if(existingAssignment.length === 0) return {error: 'La asignación no existe'};
         // Además se verifica que no exista una actividad con el mismo nombre en la misma asignación
         const [existingActivity] = await db.query(
-            `SELECT * FROM activities WHERE assignment_id = ? AND activity_name = ?`,
+            `SELECT * FROM activities WHERE assignment_id = ? AND title = ?`,
             [assignment_id, rest.title]
         );
         if(existingActivity.length > 0) return {error: 'Ya existe una actividad con ese nombre en esta asignación'};

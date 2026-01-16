@@ -15,7 +15,7 @@ Content-Type: application/json
     "role_id": 2,
     "first_name": "Jose",
     "last_name": "Santana",
-    "email": "jose.santana@example.com",
+    "email": "josesantana05@gmail.com",
     "phone": "04144204521",
     "password_hash": "JSa06..."
 }
@@ -46,4 +46,4 @@ Content-Type: application/json
 }
 
 ### Borrar un usuario
-DELETE http://localhost:5200/api/auth/delete/9
+DELETE http://localhost:5200/api/auth/delete/8

@@ -58,6 +58,8 @@ export class SubmissionController {
         if(!req.file) return res.status(400).json({error: 'El archivo de la entrega es requerido'});
         const Data = {
             ...req.body,
+            activity_id: Number(req.body.activity_id),
+            student_user_id: Number(req.body.student_user_id),
             file_path: req.file.path
         }
         const validation = validateCreateSubmission(Data);

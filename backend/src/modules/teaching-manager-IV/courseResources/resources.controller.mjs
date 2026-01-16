@@ -43,6 +43,7 @@ export class ResourceController {
         if(!req.file) return res.status(400).json({error: 'El archivo del recurso es requerido'});
         const data = {
             ...req.body,
+            assignment_id: Number(req.body.assignment_id),
             file_path_or_url: req.file.path
         }
         const validation = validateCreateResource(data);
@@ -61,6 +62,7 @@ export class ResourceController {
             });
         }
         catch(error){
+            console.error(error);
             return res.status(500).json({error: 'Error al crear el recurso'});
         }
     }
@@ -103,6 +105,7 @@ export class ResourceController {
             });
         }
         catch(error){
+            console.error(error);
             return res.status(500).json({error: 'Error al eliminar el recurso'});
         }
     }

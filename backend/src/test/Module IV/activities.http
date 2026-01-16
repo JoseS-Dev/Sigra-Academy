@@ -1,0 +1,36 @@
+### Ruta para obtener todas las actividades de una asignación
+GET http://localhost:5200/api/activities/assignments/1/activities
+
+### Ruta para obtener una actividad por su ID
+GET http://localhost:5200/api/activities/activity/1
+
+### Ruta para cambiar la visibilidad de una actividad
+PATCH http://localhost:5200/api/activities/activity/1/visibility
+Content-Type: application/json
+
+{
+    "isVisible": false
+}
+
+### Ruta para crear una nueva actividad
+POST http://localhost:5200/api/activities/create
+Content-Type: application/json
+
+{
+    "assignment_id": 1,
+    "title": "Nueva Actividad",
+    "description": "Descripción de la nueva actividad",
+    "weight_percentage": 15,
+    "due_date": "2024-07-15T23:59:59Z"
+}
+
+### Ruta para actualizar una actividad existente
+PATCH http://localhost:5200/api/activities/update/1
+Content-Type: application/json
+
+{
+    "weight_percentage": 20
+}
+
+### Ruta para eliminar una actividad
+DELETE http://localhost:5200/api/activities/delete/11

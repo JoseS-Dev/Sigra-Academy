@@ -1,0 +1,31 @@
+### Ruta para obtener todas las inscripciones
+GET http://localhost:5200/api/enrollments/all
+
+### Ruta para obtener las inscripciones de una sección
+GET http://localhost:5200/api/enrollments/section/1
+
+### Ruta para obtener una inscripción por ID
+GET http://localhost:5200/api/enrollments/1
+
+### Ruta para obtener las inscripciones por su estado
+GET http://localhost:5200/api/enrollments/status/active
+
+### Ruta para crear una nueva inscripción
+POST http://localhost:5200/api/enrollments/create
+Content-Type: application/json
+
+{
+    "student_user_id": 9,
+    "section_id": 1
+}
+
+### Ruta para actualizar una inscripción
+PATCH http://localhost:5200/api/enrollments/update/11
+Content-Type: application/json
+
+{
+    "status": "dropped"
+}
+
+### Ruta para eliminar una inscripción
+DELETE http://localhost:5200/api/enrollments/delete/11

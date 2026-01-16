@@ -1,0 +1,14 @@
+### Ruta para registrar una asistencia
+POST http://localhost:5200/api/assistance/register
+Content-Type: application/json
+
+{
+    "assignment_id": 1,
+    "student_user_id": 3
+}
+
+### Ruta para obtener todas las asistencias de una asignación
+GET http://localhost:5200/api/assistance/assignment/1
+
+### Ruta para actualizar una asistencia
+PATCH http://localhost:5200/api/assistance/update/1

@@ -68,6 +68,7 @@ CREATE TABLE sections (
     academic_year_id INT NOT NULL,
     section_name VARCHAR(5) NOT NULL, -- "A", "B", "C"
     capacity INT DEFAULT 20, -- Cupos máximos
+    number_of_students INT DEFAULT 0, -- Cantidad actual de estudiantes inscritos
     FOREIGN KEY (grade_id) REFERENCES grades(grade_id) ON DELETE CASCADE,
     FOREIGN KEY (academic_year_id) REFERENCES academic_years(year_id) ON DELETE CASCADE
 );
@@ -170,12 +171,21 @@ CREATE TABLE course_resources (
     resource_id INT AUTO_INCREMENT PRIMARY KEY,
     assignment_id INT NOT NULL,
     title VARCHAR(150) NOT NULL,
-    resource_type ENUM('PDF', 'Link', 'Video', 'Slide') NOT NULL,
+    resource_type ENUM('PDF', 'Video') NOT NULL,
     file_path_or_url VARCHAR(255) NOT NULL, 
     uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (assignment_id) REFERENCES teacher_assignments(assignment_id) ON DELETE CASCADE
 );
 
+-- Asistencia de Estudiantes
+CREATE TABLE course_access_log(
+    access_id INT AUTO_INCREMENT PRIMARY KEY,
+    student_user_id INT NOT NULL,
+    assignment_id INT NOT NULL,
+    access_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (student_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (assignment_id) REFERENCES teacher_assignments(assignment_id) ON DELETE CASCADE
+);
 -- ==========================================
 -- MODULO 5: CALIFICACIONES
 -- ==========================================

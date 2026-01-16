@@ -1,0 +1,48 @@
+### Ruta para obtener todos los recursos de un curso
+GET http://localhost:5200/api/resources/assignments/1/resources
+
+### Ruta para obtener un recurso específico por su ID
+GET http://localhost:5200/api/resources/resource/1
+
+### Ruta para subir un nuevo recurso a un curso
+POST http://localhost:5200/api/resources/create
+Content-Type: multipart/form-data; boundary=--CustomBoundary
+
+----CustomBoundary
+Content-Disposition: form-data; name="assignment_id"
+
+1
+----CustomBoundary
+Content-Disposition: form-data; name="title"
+
+Nuevo Recurso de Prueba
+----CustomBoundary
+Content-Disposition: form-data; name="resource_type"
+
+PDF
+----CustomBoundary
+Content-Disposition: form-data; name="file_path_or_url"; filename="recurso.pdf"
+
+./uploads/recurso.pdf
+----CustomBoundary----
+
+### Ruta para actualizar un recurso existente
+PATCH http://localhost:5200/api/resources/update/18
+Content-Type: multipart/form-data; boundary=--CustomBoundary
+
+----CustomBoundary
+Content-Disposition: form-data; name="title"
+
+Recurso Actualizado de Prueba
+----CustomBoundary
+Content-Disposition: form-data; name="resource_type"
+
+PDF
+----CustomBoundary
+Content-Disposition: form-data; name="file_path_or_url"; filename="recurso_actualizado.pdf"
+
+./uploads/recurso_actualizado.pdf
+----CustomBoundary----
+
+### Ruta para eliminar un recurso por su ID
+DELETE http://localhost:5200/api/resources/delete/18

@@ -73,6 +73,7 @@ export class ActivitiesController {
             });
         }
         catch(error){
+            console.error(error);
             return res.status(500).json({error: 'Error al crear la actividad'});
         }
     }
