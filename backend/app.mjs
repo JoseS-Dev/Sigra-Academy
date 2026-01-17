@@ -24,6 +24,6 @@ registerRoutes(app, ListRoutes);
 
 // Servidor escuchando en el puerto configurado
 app.listen(SETTINGS.PORT, () => {
-    console.log(`Servidor ejecutándose en el puerto ${SETTINGS.PORT}`);
+    console.log(`Servidor ejecutándose en http://localhost:${SETTINGS.PORT}`);
 });
 

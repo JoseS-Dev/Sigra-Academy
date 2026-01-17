@@ -11,6 +11,8 @@ const controller = new AssignemtController({assignmentModel: TeacherAssignmentMo
 router.get('/student/:studentId/courses', controller.getCoursesByStudentId);
 // Ruta para obtener cursos asignados a una sección
 router.get('/section/:sectionId/courses', controller.getCoursesBySectionId);
+// Ruta para obtener cursos asignados a un profesor
+router.get('/teacher/:teacherId/courses', controller.getCoursesByTeacherId);
 // Ruta para obtener detalles de un curso asignado
 router.get('/course/:assignmentId', controller.getCourseById);
 // Ruta para obtener todas las actividades de un curso asignado

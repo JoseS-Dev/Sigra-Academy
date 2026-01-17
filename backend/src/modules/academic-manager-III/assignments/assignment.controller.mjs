@@ -22,6 +22,24 @@ export class AssignemtController {
         }
     }
 
+    // Controlador para la obtener todos los cursos asignados a un profesor
+    getCoursesByTeacherId = async (req, res) => {
+        const { teacherId } = req.params;
+        try{
+            const result =  await this.assignmentModel.getCourseByTeacherId(teacherId);
+            if(result.error) return res.status(404).json({error: result.error});
+            return res.status(200).json({
+                message: result.message,
+                courses: result.courses
+            });
+        }
+        catch(error){
+            console.error(error);
+            return res.status(500).json({error: `Error obteniendo cursos asignados: ${error.message}`});
+        }
+    }
+
+
     // Método para obtener cursos asignados a una sección
     getCoursesBySectionId = async (req, res) => {
         const { sectionId } = req.params;

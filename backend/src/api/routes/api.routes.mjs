@@ -3,7 +3,6 @@ import { SETTINGS } from "../../../config/settings.config.mjs";
 import { controlRoute } from "../../modules/access-control-I/control.route.mjs";
 import { subjectRoute } from "../../modules/academic-structure-II/subjects/subjects.route.mjs";
 import { GradesLogRoutes } from "../../modules/grades-record-V/grades/grades.route.mjs";
-import { RecordsRoutes } from "../../modules/grades-record-V/records/records.route.mjs";
 import { prelaciesRoute } from "../../modules/academic-structure-II/prelacies/prelacies.route.mjs";
 import { SectionRoutes } from "../../modules/academic-structure-II/sections/section.route.mjs";
 import { GradeRoutes } from "../../modules/academic-structure-II/grades/grade.route.mjs";
@@ -34,8 +33,7 @@ export const ListRoutes = {
         enrollments: router.use(`${SETTINGS.BASE_PATH}/enrollments`, EnrollmentRouter)
     },
     grades: {
-        grades: router.use(`${SETTINGS.BASE_PATH}/grades-log`, GradesLogRoutes),
-        records: router.use(`${SETTINGS.BASE_PATH}/records`, RecordsRoutes)
+        grades: router.use(`${SETTINGS.BASE_PATH}/grades-log`, GradesLogRoutes)
     },
     notifications: {
         notifications: router.use(`${SETTINGS.BASE_PATH}/notifications`, NotificationRoutes)

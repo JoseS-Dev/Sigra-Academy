@@ -4,6 +4,9 @@ GET http://localhost:5200/api/assignments/student/3/courses
 ### Ruta para obtener cursos asignados a una seccion
 GET http://localhost:5200/api/assignments/section/3/courses
 
+### Ruta para obtener cursos asignados a un profesor
+GET http://localhost:5200/api/assignments/teacher/2/courses
+
 ### Ruta para obtener detalles de un curso asigando
 GET http://localhost:5200/api/assignments/course/1
 

@@ -29,6 +29,36 @@ export class TeacherAssignmentModel {
         };
     }
 
+    // Método para obtener todos los cursos asignados a un profesor
+    static async getCourseByTeacherId(teacherId){
+        if(!teacherId) return {error: 'El ID del profesor es requerido'};
+        // Se verifica que el profesor exista
+        const [existingTeacher] = await db.query(
+            `SELECT u.* FROM users u JOIN roles r ON u.role_id = r.role_id
+            WHERE u.user_id = ? AND r.role_name = 'teacher'`,
+            [teacherId]
+        );
+        if(existingTeacher.length === 0) return {error: 'Profesor no encontrado'};
+        // Si existe, se obtienen los cursos asignados
+        const [courses] = await db.query(
+            `SELECT ta.assignment_id, s.subject_name, sec.section_name, g.grade_name,
+            ay.name, act.title, act.due_date, act.weight_percentage, CONCAT(u.first_name, ' ', u.last_name) AS teacher_name
+            FROM teacher_assignments ta JOIN subjects s ON ta.subject_id = s.subject_id
+            JOIN sections sec ON ta.section_id = sec.section_id
+            JOIN grades g ON sec.grade_id = g.grade_id
+            JOIN users u ON ta.teacher_user_id = u.user_id
+            JOIN academic_years ay ON sec.academic_year_id = ay.year_id
+            LEFT JOIN activities act ON ta.assignment_id = act.assignment_id
+            WHERE ta.teacher_user_id = ?`,
+            [teacherId]
+        );
+        if(courses.length === 0) return {error: 'No se encontraron cursos asignados para este profesor'};
+        return {
+            message: 'Cursos asignados obtenidos exitosamente',
+            courses: courses
+        };
+    }
+
     // Método para obtener todos los cursos asignados a una sección
     static async getCoursesBySectionId(sectionId){
         if(!sectionId) return {error: 'El ID de la sección es requerido'};
@@ -61,20 +91,38 @@ export class TeacherAssignmentModel {
     static async getCourseByID(assignmentId){
         if(!assignmentId) return {error: 'El ID de la asignación es requerido'};
         const [courseDetails] = await db.query(
-            `SELECT ta.assignment_id, s.subject_name, sec.section_name, g.grade_name,
-            ay.name AS academic_year, CONCAT(u.first_name, ' ', u.last_name) AS teacher_name
+            `SELECT ta.assignment_id, s.subject_name,sec.section_id, sec.section_name, g.grade_name,
+            ay.name AS academic_year, CONCAT(u.first_name, ' ', u.last_name) AS teacher_name,
+            act.title AS activity_title, act.due_date AS activity_due_date, act.weight_percentage AS activity_weight
             FROM teacher_assignments ta JOIN subjects s ON ta.subject_id = s.subject_id
             JOIN sections sec ON ta.section_id = sec.section_id
             JOIN grades g ON sec.grade_id = g.grade_id
+            JOIN activities act ON ta.assignment_id = act.assignment_id
             JOIN academic_years ay ON sec.academic_year_id = ay.year_id
             JOIN users u ON ta.teacher_user_id = u.user_id
             WHERE ta.assignment_id = ?`,
             [assignmentId]
         );
+        // Además Obtengo los estudiantes inscritos en esa asignación
+        const [students] = await db.query(
+            `SELECT u.user_id, CONCAT(u.first_name, ' ', u.last_name) as student_name
+            FROM enrollments e JOIN users u ON e.student_user_id = u.user_id
+            WHERE e.section_id = ?`,
+            [courseDetails[0].section_id]
+        );
+        // Y las actividades asociadas a esa asignación
+        const [activities] = await db.query(
+            `SELECT * FROM activities WHERE assignment_id = ? AND is_visible = 1`,
+            [assignmentId]
+        );
         if(courseDetails.length === 0) return {error: 'No se encontraron detalles para esta asignación'};
         return {
             message: 'Detalles de la asignación obtenidos exitosamente',
-            course: courseDetails[0]
+            course: {
+                ...courseDetails[0],
+                students: students,
+                activities: activities
+            }
         }
     }
 
