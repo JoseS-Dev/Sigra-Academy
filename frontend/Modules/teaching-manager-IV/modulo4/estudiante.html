@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGRA - Portal Estudiante</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/images/logo.PNG" alt="Logo">
+            <h1>SIGRA Estudiante</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('inicio')" class="active">Inicio</a>
+            <a href="#" onclick="showSection('mis-cursos')">Mis Cursos</a>
+            <a href="#" onclick="showSection('tareas-pendientes')">Tareas</a>
+            <a href="#" onclick="showSection('asistencia')">Asistencia</a>
+            <a href="#" onclick="showSection('reportes')">Reportes</a>
+        </div>
+        <div class="user-profile">
+            <span id="user-name-label">Cargando...</span>
+        </div>
+    </nav>
+
+    <main class="container">
+
+        <section id="inicio" class="view-section active">
+            <h2>Mi Área Personal</h2>
+            
+            <div class="calendar-wrapper">
+                <div id="calendario-mes-titulo" class="calendar-header">Enero 2026</div>
+                <div class="calendar-grid">
+                    <div class="calendar-day-header">Dom</div>
+                    <div class="calendar-day-header">Lun</div>
+                    <div class="calendar-day-header">Mar</div>
+                    <div class="calendar-day-header">Mie</div>
+                    <div class="calendar-day-header">Jue</div>
+                    <div class="calendar-day-header">Vie</div>
+                    <div class="calendar-day-header">Sab</div>
+                    </div>
+                <div id="calendario-grid-visual" class="calendar-grid"></div>
+            </div>
+
+            <div class="card-grid" style="margin-top:20px;">
+                <div class="card">
+                    <h3><i class="fas fa-bell"></i> Actividades Recientes</h3>
+                    <div id="recent-activities-list">
+                        <p id="recent-placeholder">Cargando actividades recientes...</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mis-cursos" class="view-section">
+            <h2>Mis Asignaturas Inscritas</h2>
+            <div id="grid-cursos-estudiante" class="card-grid">
+                </div>
+        </section>
+
+        <section id="tareas-pendientes" class="view-section">
+            <h2><i class="fas fa-tasks"></i> Tareas</h2>
+            <div style="display:flex; gap:20px; align-items:flex-start;">
+                <div style="flex:1;">
+                    <h3>Tareas Pendientes</h3>
+                    <div id="lista-tareas-pendientes"></div>
+                </div>
+                <div style="width:360px; max-width:40%;">
+                    <h3>Tareas Entregadas</h3>
+                    <div id="lista-tareas-entregadas"></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="asistencia" class="view-section">
+            <h2><i class="fas fa-user-check"></i> Marcar Asistencia Semanal</h2>
+            <div id="panel-asistencia">
+                </div>
+        </section>
+
+        <section id="reportes" class="view-section">
+            <h2><i class="fas fa-chart-line"></i> Reporte de Calificaciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Asignatura</th>
+                        <th>Actividad</th>
+                        <th>Nota</th>
+                        <th>Porcentaje</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-notas-estudiante"></tbody>
+            </table>
+        </section>
+
+    </main>
+    <script src="js/data.js"></script>
+    <script src="js/estudiante.js"></script>
+</body>
+</html>

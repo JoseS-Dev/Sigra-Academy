@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIGRA - Portal Profesor</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/images/logo.PNG" alt="Logo Colegio Monte del Mar">
+            <h1>SIGRA Académico</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="showSection('inicio')" class="active">Inicio</a>
+            <a href="#" onclick="showSection('mis-cursos')">Mis Cursos</a>
+            <a href="#" onclick="showSection('alumnos')">Alumnos</a>
+            <a href="#" onclick="showSection('crear-tarea')">Gestión Tareas</a>
+            <a href="#" onclick="showSection('tareas-recibidas')">Calificar</a>
+            <a href="#" onclick="showSection('asistencia')">Asistencia</a>
+        </div>
+        <div class="user-profile">
+            <span id="prof-user-name">Cargando...</span>
+        </div>
+    </nav>
+
+    <main class="container">
+        
+        <section id="inicio" class="view-section active">
+            <h2>Bienvenido, Profesor</h2>
+            <p>Seleccione una opción para gestionar sus actividades académicas.</p>
+            <div class="card-grid">
+                <div class="card" onclick="showSection('mis-cursos')" style="cursor:pointer">
+                    <h3><i class="fas fa-book"></i> Mis Cursos</h3>
+                    <p>Ver asignaturas asignadas.</p>
+                </div>
+                <div class="card" onclick="showSection('alumnos')" style="cursor:pointer">
+                    <h3><i class="fas fa-users"></i> Listado Alumnos</h3>
+                    <p>Ver inscritos y exportar listas.</p>
+                </div>
+                <div class="card" onclick="showSection('tareas-recibidas')" style="cursor:pointer">
+                    <h3><i class="fas fa-check-double"></i> Corregir Tareas</h3>
+                    <p>Calificar entregas pendientes.</p>
+                </div>
+                <div class="card" onclick="showSection('asistencia')" style="cursor:pointer">
+                    <h3><i class="fas fa-calendar-check"></i> Asistencia</h3>
+                    <p>Gestionar y reportar asistencia.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="mis-cursos" class="view-section">
+            <h2><i class="fas fa-chalkboard"></i> Mis Asignaturas</h2>
+            <div id="lista-cursos-profesor" class="card-grid">
+                </div>
+        </section>
+
+        <section id="alumnos" class="view-section">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h2><i class="fas fa-users"></i> Listado de Alumnos</h2>
+                <button id="btn-export-alumnos" onclick="exportarAlumnosCSV()" class="btn btn-success" style="display:none;">
+                    <i class="fas fa-file-excel"></i> Exportar Lista
+                </button>
+            </div>
+            
+            <div class="form-group" style="margin-top:15px; display:flex; gap:10px; align-items:end;">
+                <div style="flex:1">
+                    <label>Seleccionar Curso / Sección:</label>
+                    <select id="filtro-curso-alumnos" class="form-control" onchange="cargarAlumnos()">
+                        <option value="">Seleccione...</option>
+                    </select>
+                </div>
+                <div style="width:250px">
+                    <label>Búsqueda</label>
+                    <input id="alumnos-search" class="form-control" placeholder="Nombre o email" oninput="debouncedCargarAlumnos()" />
+                </div>
+                <div style="width:180px">
+                    <label>Orden</label>
+                    <select id="alumnos-orderby" class="form-control" onchange="cargarAlumnos()">
+                        <option value="nombre">Nombre</option>
+                        <option value="email">Email</option>
+                        <option value="user_id">ID</option>
+                    </select>
+                </div>
+                <div style="width:120px">
+                    <label>Dirección</label>
+                    <select id="alumnos-order" class="form-control" onchange="cargarAlumnos()">
+                        <option value="asc">Asc</option>
+                        <option value="desc">Desc</option>
+                    </select>
+                </div>
+            </div>
+            <table id="tabla-alumnos">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Sección</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <!-- Pagination controls -->
+            <div id="alumnos-pagination" style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                <div>
+                    <button id="alumnos-prev" class="btn" onclick="alumnosPrev()">&laquo; Anterior</button>
+                    <button id="alumnos-next" class="btn" onclick="alumnosNext()">Siguiente &raquo;</button>
+                </div>
+                <div id="alumnos-page-info" style="font-size:0.95rem; color:#333;">Página 1 de 1</div>
+                <div style="margin-left:auto; display:flex; gap:10px; align-items:center;">
+                    <label for="alumnos-page-size" style="margin-bottom:0;">Tamaño:</label>
+                    <select id="alumnos-page-size" class="form-control" onchange="alumnosChangePageSize()">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                        <option value="all">Todos</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <section id="crear-tarea" class="view-section">
+            <h2><i class="fas fa-edit"></i> Crear Nueva Tarea</h2>
+            <div class="card">
+                <form id="form-crear-tarea">
+                    <div class="form-group">
+                        <label>Asignatura y Sección</label>
+                        <select id="tarea-curso-id" class="form-control" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Título de la Tarea</label>
+                        <input type="text" id="tarea-titulo" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Instrucciones / Comentarios</label>
+                        <textarea id="tarea-desc" class="form-control" rows="4"></textarea>
+                    </div>
+                    <div class="form-grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div class="form-group">
+                            <label>Fecha Inicio</label>
+                            <input type="date" id="tarea-inicio" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Fecha Límite</label>
+                            <input type="date" id="tarea-fin" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="form-group" style="max-width:220px;">
+                        <label>Ponderación (%)</label>
+                        <input type="number" id="tarea-weight" class="form-control" min="0" max="100" step="0.01" value="20">
+                        <small style="color:#666;">Valor entre 0 y 100 — la ponderación de la actividad dentro del curso</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Publicar Tarea</button>
+                </form>
+                <!-- Contenedor para mostrar las actividades de una asignación seleccionada -->
+                <div id="assignment-activities-panel" style="margin-top:16px;"></div>
+            </div>
+        </section>
+
+        <section id="tareas-recibidas" class="view-section">
+            <h2><i class="fas fa-marker"></i> Tareas Recibidas y Calificaciones</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Tarea</th>
+                        <th>Archivo</th>
+                        <th>Fecha Entrega</th>
+                        <th>Nota (0-20)</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-entregas-profesor">
+                    </tbody>
+            </table>
+        </section>
+
+        <section id="asistencia" class="view-section">
+            <h2><i class="fas fa-clock"></i> Gestión de Asistencia</h2>
+            <div class="card">
+                <h3>Nueva Sesión de Asistencia</h3>
+                <form id="form-crear-asistencia">
+                    <div class="form-group">
+                        <label>Curso</label>
+                        <select id="asistencia-curso-id" class="form-control"></select>
+                    </div>
+                    <div class="form-group" style="display:flex; gap:10px;">
+                        <div style="flex:1">
+                            <label>Número de Semana</label>
+                            <input type="number" id="asistencia-week" class="form-control" min="1" placeholder="Ej: 1">
+                        </div>
+                        <div style="flex:1">
+                            <label>Fecha Apertura</label>
+                            <input type="datetime-local" id="asistencia-open" class="form-control">
+                        </div>
+                        <div style="flex:1">
+                            <label>Fecha Límite</label>
+                            <input type="datetime-local" id="asistencia-close" class="form-control">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Crear Sesión</button>
+                </form>
+
+                <!-- Session controls -->
+                <div id="session-controls" style="margin-top:15px; display:none;">
+                    <h4 id="session-info">Asistencia creada correctamente.</h4>
+                    <button id="btn-export-session" class="btn btn-success" onclick="exportSessionCSV()" style="display:none;"><i class="fas fa-file-excel"></i> Exportar Sesión</button>
+                </div>
+
+                <!-- Lista de sesiones -->
+                <div id="sesiones-list" style="margin-top:12px;">
+                    <!-- Aquí se mostrarán las sesiones registradas para la sección -->
+                </div>
+            </div>
+            
+            <!-- Session summary will be injected here when a session is selected -->
+            <div id="session-summary-above-table" style="display:flex; justify-content:space-between; align-items:center; margin-top:20px;">
+                <!-- populated dynamically -->
+            </div>
+
+            <table id="tabla-reporte-asistencia">
+                <thead>
+                    <tr>
+                        <th>Estudiante</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+
+    </main>
+    <script src="js/data.js"></script>
+    <script src="js/profesor.js"></script>
+</body>
+</html>

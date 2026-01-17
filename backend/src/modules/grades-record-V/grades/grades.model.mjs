@@ -13,10 +13,9 @@ export class GradesLogModel {
         if(existingActivity.length === 0) return {error: 'La actividad no existe.'};
         // Si existe, se obtienen los registros de calificaciones
         const [gradesLog] = await db.query(
-            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name, g.grade_name,
+            `SELECT gl.grade_id, gl.student_user_id, CONCAT(u.first_name, ' ', u.last_name) AS student_name,
             gl.score, gl.feedback, a.title, s.section_name, su.subject_name FROM grades_log gl 
             JOIN users u ON gl.student_user_id = u.user_id
-            JOIN grades g ON gl.grade_id = g.grade_id
             JOIN activities a ON gl.activity_id = a.activity_id
             JOIN teacher_assignments ta ON a.assignment_id = ta.assignment_id
             JOIN sections s ON ta.section_id = s.section_id
@@ -24,7 +23,20 @@ export class GradesLogModel {
             WHERE gl.activity_id = ?`,
             [activityId]
         );
-        if(gradesLog.length === 0) return {message: 'No hay registros de calificaciones para esta actividad.'};
+        if(gradesLog.length === 0) {
+            const [fallback] = await db.query(
+                `SELECT gl.grade_id, gl.student_user_id, CONCAT(u.first_name, ' ', u.last_name) AS student_name, gl.score, gl.feedback, a.title FROM grades_log gl JOIN users u ON gl.student_user_id = u.user_id JOIN activities a ON gl.activity_id = a.activity_id WHERE gl.activity_id = ?`,
+                [activityId]
+            );
+            if(fallback.length === 0) {
+                return {message: 'No hay registros de calificaciones para esta actividad.'};
+            }
+            return {
+                message: `Se encontraron ${fallback.length} registros de calificaciones.`,
+                grades: fallback
+            };
+        }
+        console.debug('getGradesLogByActivityId - rows:', gradesLog.length);
         return {
             message: `Se encontraron ${gradesLog.length} registros de calificaciones.`,
             grades: gradesLog
@@ -44,9 +56,8 @@ export class GradesLogModel {
         if(existingUser.length === 0) return {error: 'El usuario no existe o no es un estudiante.'};
         // Si existe, se obtienen los registros de calificaciones de dicho estudiante
         const [gradesLog] = await db.query(
-            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name, g.grade_name,
+            `SELECT gl.grade_id, gl.activity_id, gl.student_user_id, CONCAT(u.first_name, ' ', u.last_name) AS student_name,
             gl.score, gl.feedback, a.title, s.section_name FROM grades_log gl JOIN users u ON gl.student_user_id = u.user_id
-            JOIN grades g ON gl.grade_id = g.grade_id
             JOIN activities a ON gl.activity_id = a.activity_id
             JOIN teacher_assignments ta ON a.assignment_id = ta.assignment_id
             JOIN sections s ON ta.section_id = s.section_id
@@ -77,9 +88,8 @@ export class GradesLogModel {
         }
         // Si existen, se obtienen los registros de calificaciones
         const [gradesLog] = await db.query(
-            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name, g.grade_name,
+            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name,
             gl.score, gl.feedback, a.title, su.subject_name, s.section_name FROM grades_log gl JOIN users u ON gl.student_user_id = u.user_id
-            JOIN grades g ON gl.grade_id = g.grade_id
             JOIN activities a ON gl.activity_id = a.activity_id
             JOIN teacher_assignments ta ON a.assignment_id = ta.assignment_id
             JOIN sections s ON ta.section_id = s.section_id
@@ -97,9 +107,8 @@ export class GradesLogModel {
     // Método para obtener todos los registros de calificaciones
     static async getAllGradesLog(){
         const [gradesLog] = await db.query(
-            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name, g.grade_name,
+            `SELECT CONCAT(u.first_name, ' ', u.last_name) AS student_name,
             gl.score, gl.feedback, a.title, s.section_name FROM grades_log gl JOIN users u ON gl.student_user_id = u.user_id
-            JOIN grades g ON gl.grade_id = g.grade_id
             JOIN activities a ON gl.activity_id = a.activity_id
             JOIN teacher_assignments ta ON a.assignment_id = ta.assignment_id
             JOIN sections s ON ta.section_id = s.section_id`
@@ -129,7 +138,7 @@ export class GradesLogModel {
             return {error: 'La actividad o el estudiante no existen.'};
         }
 
-        // Si existe, se inserta la nota y el feedback que se le da al estudiante
+        // Si existe, se inserta la nota
         const [newGradeLog] = await db.query(
             `INSERT INTO grades_log (activity_id, student_user_id, score, feedback)
             VALUES (?, ?, ?, ?)`,

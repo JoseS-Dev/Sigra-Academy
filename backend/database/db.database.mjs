@@ -1,8 +1,6 @@
 import {createConnection} from 'mysql2/promise.js'
 import { SETTINGS } from '../config/settings.config.mjs'
 
-
-// Defino la conexión a la base de datos
 export const db = await createConnection({
     host: SETTINGS.DB_HOST,
     user: SETTINGS.DB_USER,
@@ -11,15 +9,3 @@ export const db = await createConnection({
     port: SETTINGS.DB_PORT,
     decimalNumbers: true
 });
-
-// Función que verifica si la conexión fue exitosa
-export const verifyDBConnection = async () => {
-    try{
-        await db.connect();
-        console.log('Conexión a la base de datos exitosa');
-    }
-    catch(error){
-        console.error('Error al conectar a la base de datos:', error);
-        await db.end();
-    }
-}

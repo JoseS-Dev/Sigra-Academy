@@ -203,19 +203,6 @@ CREATE TABLE grades_log (
     UNIQUE(activity_id, student_user_id) -- Solo una nota por actividad por alumno
 );
 
--- Historial Académico Final (Boletín consolidado)
--- Esta tabla se llena al final del lapso/año mediante el motor de cálculo
-CREATE TABLE final_academic_records (
-    record_id INT AUTO_INCREMENT PRIMARY KEY,
-    student_user_id INT NOT NULL,
-    assignment_id INT NOT NULL, -- Nos dice la materia y el periodo
-    final_score DECIMAL(5,2) NOT NULL,
-    status ENUM('Aprobado', 'Aplazado') NOT NULL,
-    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (student_user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (assignment_id) REFERENCES teacher_assignments(assignment_id) ON DELETE CASCADE
-);
-
 -- ==========================================
 -- MODULO 7: NOTIFICACIONES
 -- ==========================================

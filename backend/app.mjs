@@ -7,6 +7,7 @@ import { ListRoutes } from "./src/api/routes/api.routes.mjs";
 import { activityNotifierMiddleware } from "./src/api/middlewares/email.middleware.mjs";
 
 
+
 // Se inicializan el servidor express
 const app = express();
 
@@ -18,18 +19,11 @@ app.use(activityNotifierMiddleware);
 
 app.use('/uploads', express.static('uploads'));
 
-// Rutas
-app.get("/", (req, res) => {
-	res.send("Servidor funcionando correctamente");
-});
-
-// Rutas - Modulos
+// Registro de rutas
 registerRoutes(app, ListRoutes);
 
-
-// Montamos el servidor
+// Servidor escuchando en el puerto configurado
 app.listen(SETTINGS.PORT, () => {
-	console.log(
-		`Servidor escuchando en el puerto http://localhost:${SETTINGS.PORT}`
-	);
+    console.log(`Servidor ejecutándose en el puerto ${SETTINGS.PORT}`);
 });
+
