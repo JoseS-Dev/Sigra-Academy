@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { SETTINGS } from "../../../config/settings.config.mjs";
 import { controlRoute } from "../../modules/access-control-I/control.route.mjs";
+import { teacherAssignmentAccessRoute } from "../../modules/access-control-I/teacher-assignments/teacher-assignment.route.mjs";
 import { subjectRoute } from "../../modules/academic-structure-II/subjects/subjects.route.mjs";
 import { GradesLogRoutes } from "../../modules/grades-record-V/grades/grades.route.mjs";
 import { prelaciesRoute } from "../../modules/academic-structure-II/prelacies/prelacies.route.mjs";
@@ -22,7 +23,8 @@ const router = Router();
 
 export const ListRoutes = {
     auth: {
-        control: router.use(`${SETTINGS.BASE_PATH}/auth`, controlRoute)
+        control: router.use(`${SETTINGS.BASE_PATH}/auth`, controlRoute),
+        teacherAssignments: router.use(`${SETTINGS.BASE_PATH}/auth`, teacherAssignmentAccessRoute)
     },
     academicStructure: {
         subjects: router.use(`${SETTINGS.BASE_PATH}/subjects`, subjectRoute),
