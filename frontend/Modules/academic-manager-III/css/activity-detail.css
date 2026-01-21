@@ -273,13 +273,78 @@ body {
     flex-direction: column;
 }
 
-/* Tarjeta de entrega */
-.submission-card {
+.grade-container {
+    margin-bottom: 20px;
+    animation: fadeIn 0.5s ease;
+}
+
+.grade-box {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
     display: flex;
     flex-direction: column;
-    height: fit-content;
-    position: sticky; 
-    top: 20px;
+    align-items: center;
+    gap: 8px;
+}
+
+.grade-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+}
+
+.grade-value-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 2px;
+}
+
+.grade-score {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--primary);
+    line-height: 1;
+}
+
+.grade-max {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--muted);
+}
+
+.grade-status-tag {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+}
+
+.grade-status-tag.pending {
+    background: #fff7ed;
+    color: #c2410c;
+    border: 1px solid #ffedd5;
+}
+
+.grade-status-tag.evaluated {
+    background: #f0fdf4;
+    color: #15803d;
+    border: 1px solid #dcfce7;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Modificación para que la tarjeta de entrega se vea mejor con la nota */
+.submission-card {
+    padding: 24px;
+    border-top: 4px solid var(--primary);
 }
 
 .submission-header {
