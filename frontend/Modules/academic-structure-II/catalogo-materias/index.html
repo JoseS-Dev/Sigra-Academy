@@ -1,44 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SIGRA - Módulo Académico</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Catálogo de Materias - SIGRA</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#002F87",
+                        "success": "#10B981",
+                        "error": "#C52B3D",
+                        "background-light": "#F3F4F6",
+                        "background-dark": "#1a1c20",
+                        "content-card": "#FFFFFF",
+                        "text-main": "#1F2937",
+                        "nav-gray": "#64748B"
+                    },
+                    fontFamily: {
+                        "display": ["Lexend", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
     <link rel="stylesheet" href="css/styles.css">
 </head>
-<body>
-    <div class="app-container">
-        <header class="top-header">
-            <nav class="navbar">
-            <div class="nav-logo">
-                <a href="index.html"><img src="recursos/sigra-logo.svg" width="50" height="40" alt="Logo SIGRA"></a>
-                <span class="brand">SIGRA</span>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display text-text-main antialiased min-h-screen flex flex-col">
+    <header
+        class="sticky top-0 z-50 bg-white dark:bg-background-dark border-b border-gray-200 dark:border-gray-800 px-8 py-4">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="size-10 flex items-center justify-center">
+                    <img src="../assets/sigra-logo.svg" alt="Logo de SIGRA" class="w-full h-full object-contain" />
+                </div>
+                <h2 class="text-primary text-2xl font-black tracking-tight">SIGRA</h2>
             </div>
 
-            <div class="nav-right-group">
-                <ul class="nav-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Usuarios</a></li>
-                    <li><a href="#" class="active" onclick="showView('catalogo')">Asignaturas</a></li>
-                    <li><a href="#">Docentes</a></li>
-                    <li><a href="#">Reportes</a></li>
-                </ul>
+            <div class="flex items-center gap-6">
+                <nav class="hidden md:flex items-center gap-6">
+                    <a class="text-nav-gray hover:text-primary text-base font-medium transition-colors"
+                        href="../../access-control-I/user-table.html">Inicio</a>
+                    <a class="text-nav-gray hover:text-primary text-base font-medium transition-colors"
+                        href="../Gestionar Asignaciones/index.html">Inscripciones</a>
+                    <a class="text-nav-gray hover:text-primary text-base font-medium transition-colors"
+                        href="../Gestionar Asignaciones/gestionar-asignacion.html">Asignaciones</a>
+                    <a class="text-primary text-base font-bold transition-colors border-b-2 border-primary pb-1"
+                        href="index.html">Catálogo</a>
+                    <a class="text-nav-gray hover:text-primary text-base font-medium transition-colors"
+                        href="../gestion-materias/index.html">Materias</a>
+                    <a class="text-nav-gray hover:text-primary text-base font-medium transition-colors"
+                        href="../definicion-prelaciones/index.html">Prelaciones</a>
+                </nav>
 
-                <div class="nav-icons">
-                    <div class="icon-bell">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+                <div class="flex items-center gap-4">
+                    <button
+                        class="size-10 flex items-center justify-center rounded-lg bg-gray-50 text-gray-600 hover:bg-gray-100 transition-colors">
+                        <span class="material-symbols-outlined">notifications</span>
+                    </button>
+                    <div
+                        class="size-10 rounded-full bg-gray-200 overflow-hidden border-2 border-transparent hover:border-primary transition-all cursor-pointer">
+                        <img alt="Profile avatar" class="w-full h-full object-cover"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuADIAQNBOIhz8AgCJ4DVy8EvGEOtmBnmnGZ0YuFkSgoGk3FsiRM7HvL-ZsWuROht5F95KmOr4EbF94VN9LevPicOwahD_k-7hSMKTiXTGkglji04V35VjTZt7DdBYZKI0p6hd_kbx4ZOrwcGPwBE-OKjtSX7S0eMpvLRrwNIENK3l1MTGCEC-U-2NQFD7qBGimKZP7-iCg6Via2oOS3gcIWYoNGw2qTpJN9RW3LvyyM2KDfOo--lJGH043TvsKdYBlWavR6R87PamfY" />
                     </div>
-                    
-                    <a href="/perfil" class="user-profile-link">
-                        <img src="recursos/usuario-perfil.jpg" alt="User" class="user-avatar">
-                    </a>
                 </div>
             </div>
-            </nav>
-        </header>
-        
+        </div>
+    </header>
+
+    <div class="app-container">
         <main class="main">
             <div id="view-container" class="view-content"></div>
         </main>
@@ -59,6 +111,9 @@
     <!-- Toast Notification Container -->
     <div id="toast-container"></div>
 
-    <script src="js/main.js"></script> </body>
-</html></content>
-<parameter class="parameter" name="filePath">c:\Users\mauri\OneDrive\Escritorio\Mauricio\5to_Semestre\prograWeb\Sigra-Academy\frontend\Modules\academic-structure-II\catalogo-materias\index.html
+    </div>
+
+    <script src="js/main.js"></script>
+</body>
+
+</html>
