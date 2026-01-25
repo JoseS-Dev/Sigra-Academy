@@ -1,0 +1,45 @@
+:root{
+  --bg: #f8fafc;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --success: #16a34a;
+  --danger: #ef4444;
+  font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+}
+
+body{ background: var(--bg); color:#0f172a; margin:0; }
+.BoletinContenedor{ max-width:1100px; margin:24px auto; padding:16px; }
+.BoletinHeader{ display:flex; justify-content:space-between; align-items:center; gap:12px; margin-bottom:16px; }
+.BoletinHeader h1{ margin:0; font-size:1.6rem; }
+.student-info{ color:var(--muted); font-size:0.95rem; }
+
+.report-summary{ margin-bottom:18px; }
+.summary-card{ display:flex; gap:16px; background:var(--card); padding:12px; border-radius:10px; box-shadow:0 1px 2px rgba(2,6,23,0.06); }
+.final-average{ font-size:1.4rem; font-weight:700; color:var(--accent); }
+.final-status{ font-weight:600; }
+
+.subjects-list{ display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:12px; }
+.subject-card{ background:var(--card); padding:12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 1px 2px rgba(2,6,23,0.04); }
+.subject-left{ max-width:70%; }
+.subject-name{ margin:0 0 6px 0; font-size:1rem; }
+.subject-meta{ color:var(--muted); font-size:0.85rem; }
+.subject-right{ text-align:right; min-width:86px; }
+.grade-number{ font-size:1.25rem; font-weight:700; }
+.grade-percent{ color:var(--muted); font-size:0.85rem; }
+.grade-status{ margin-top:6px; padding:6px 8px; border-radius:8px; display:inline-block; font-weight:600; font-size:0.85rem; }
+.grade-status.approved{ background:rgba(22,163,74,0.12); color:var(--success); }
+.grade-status.failed{ background:rgba(239,68,68,0.08); color:var(--danger); }
+
+.activities-list{ list-style:none; margin:10px 0 0 0; padding:0; }
+.activity-item{ display:flex; justify-content:space-between; gap:8px; padding:6px 8px; background:rgba(2,6,23,0.02); border-radius:8px; margin-bottom:6px; font-size:0.9rem; }
+.act-title{ color:#0f172a; display:block; }
+.act-meta{ font-size:0.75rem; color:var(--muted); margin-top:4px; }
+.act-score{ font-weight:700; color:var(--accent); display:block; text-align:right; }
+.act-contrib{ font-size:0.85rem; color:var(--muted); text-align:right; }
+.grade-meta{ font-size:0.85rem; color:var(--muted); margin-top:6px; }
+
+.error-msg{ color:var(--danger); padding:12px; background:#fff0f0; border-radius:8px; }
+.empty{ color:var(--muted); padding:12px; }
+
+@media (max-width:640px){ .BoletinHeader{ flex-direction:column; align-items:flex-start; gap:6px; } }

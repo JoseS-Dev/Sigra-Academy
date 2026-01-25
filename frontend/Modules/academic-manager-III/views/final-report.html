@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Boletín Final | SIGRA</title>
+    <!-- 1. EL GUARDIÁN PRIMERO -->
+    <script src="../js/auth-guard.js"></script>
+    
+    <!-- 2. ESTILOS -->
+    <link rel="stylesheet" href="../css/navbar.css">
+    <link rel="stylesheet" href="../css/activity-detail.css"> <!-- Para heredar variables y badges -->
+    <link rel="stylesheet" href="../css/final-report.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar"></nav>
+
+    <main class="BoletinContenedor">
+        <!-- Botón Volver -->
+        <div class="navigation-header" style="margin-bottom: 20px;">
+            <a href="manager.view.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                Volver a Mis Cursos
+            </a>
+        </div>
+
+        <header class="BoletinHeader">
+            <h1>Boletín de Calificaciones Real</h1>
+            <div class="student-info">
+                <strong id="studentName">Cargando...</strong>
+                <span id="studentId"></span>
+            </div>
+        </header>
+
+        <section id="reportSummary" class="report-summary">
+            <div class="summary-card">
+                <div>
+                    <strong>Promedio final</strong>
+                    <div id="finalAverage" class="final-average">-</div>
+                </div>
+                <div>
+                    <strong>Estado</strong>
+                    <div id="finalStatus" class="final-status">-</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contenedor donde se inyectarán las tablas por materia -->
+        <section id="subjectsList" class="subjects-list">
+            <p style="grid-column:1/-1; text-align:center; padding:30px; color:gray;">Procesando registros académicos...</p>
+        </section>
+    </main>
+
+    <!-- 3. SCRIPTS EN ORDEN CORRECTO -->
+    <script src="../js/config.js"></script>
+    <script src="../components/nav.js" defer></script>
+    <script src="../js/final-report.controller.js" defer></script>
+</body>
+</html>
