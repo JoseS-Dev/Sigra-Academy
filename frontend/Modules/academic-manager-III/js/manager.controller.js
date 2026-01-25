@@ -1,7 +1,7 @@
-const API_URL = 'http://localhost:3000/api/manager';
+const API_URL = 'http://localhost:5200/api/manager';
 
-const storedUser = JSON.parse(localStorage.getItem('user') || 'null');
-const STUDENT_ID = storedUser ? storedUser.user_id : 3;
+const storedUser = JSON.parse(localStorage.getItem('sigra_user') || 'null');
+const STUDENT_ID = storedUser?.id || storedUser?.user_id;
 
 function getCourseImage(subjectName) {
   const name = subjectName.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");

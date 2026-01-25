@@ -1,6 +1,7 @@
-const API_URL = 'http://localhost:3000/api/manager';
-const SUBMISSIONS_API = 'http://localhost:3000/api/submissions';
-const STUDENT_ID = 3;
+const API_URL = 'http://localhost:5200/api/manager';
+const SUBMISSIONS_API = 'http://localhost:5200/api/submissions';
+const storedUser = JSON.parse(localStorage.getItem('sigra_user') || 'null');
+const STUDENT_ID = storedUser?.id || storedUser?.user_id;
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -78,7 +79,7 @@ function updateUIAsSubmitted(submission) {
     // 3. Normalizar la ruta del archivo para visualización
     let cleanPath = submission.file_path.replace(/\\/g, '/');
     if (!cleanPath.startsWith('/')) cleanPath = '/' + cleanPath;
-    const fileURL = `http://localhost:3000${cleanPath}`;
+    const fileURL = `http://localhost:5200${cleanPath}`;
     const fileName = cleanPath.split('/').pop();
 
     // 4. Ocultar zona de carga y mostrar tarjeta de archivo
