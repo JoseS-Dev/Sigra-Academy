@@ -142,7 +142,8 @@ export class ActivitiesModel {
         if(newActivity.length === 0) return {error: 'No se pudo obtener la actividad creada'};
         return {
             message: 'Actividad creada exitosamente',
-            activity: newActivity[0]
+            activity: newActivity[0],
+            teacher_user_id: existingAssignment[0].teacher_user_id
         }
     }
 
@@ -193,7 +194,9 @@ export class ActivitiesModel {
         if(!activityId) return {error: 'El ID de la actividad es requerido'};
         // Se verifica que exista la actividad
         const [existingActivity] = await db.query(
-            `SELECT * FROM activities WHERE activity_id = ?`,
+            `SELECT act.*, ta.teacher_user_id FROM activities act
+            JOIN teacher_assignments ta ON act.assignment_id = ta.assignment_id
+            WHERE act.activity_id = ?`,
             [activityId]
         );
         if(existingActivity.length === 0) return {error: 'La actividad no existe'};
@@ -204,7 +207,8 @@ export class ActivitiesModel {
         );
         if(deletedActivity.affectedRows === 0) return {error: 'No se pudo eliminar la actividad'};
         return {
-            message: 'Actividad eliminada exitosamente'
+            message: 'Actividad eliminada exitosamente',
+            teacher_user_id: existingActivity[0].teacher_user_id
         }
     }
 }

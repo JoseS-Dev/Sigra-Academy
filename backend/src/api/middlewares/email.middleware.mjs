@@ -91,11 +91,11 @@ function renderTemplate(template, data) {
 
   switch (template) {
     case 'activity':
-      return baseTemplate({ title, intro, detailsHtml, actionLabel: 'Ver actividad', actionUrl: APP_URL });
+      return baseTemplate({ title, intro, detailsHtml, actionLabel: 'Ver actividad', actionUrl: SETTINGS.APP_URL });
     case 'warning':
-      return baseTemplate({ title, intro: `${intro}<br/>Atención: se detectó un evento importante.`, detailsHtml, actionLabel: 'Revisar ahora', actionUrl: APP_URL });
+      return baseTemplate({ title, intro: `${intro}<br/>Atención: se detectó un evento importante.`, detailsHtml, actionLabel: 'Revisar ahora', actionUrl: SETTINGS.APP_URL });
     case 'notification':
-      return baseTemplate({ title, intro, detailsHtml, actionLabel: 'Ver notificación', actionUrl: APP_URL });
+      return baseTemplate({ title, intro, detailsHtml, actionLabel: 'Ver notificación', actionUrl: SETTINGS.APP_URL });
     case 'generic':
     default:
       return baseTemplate({ title, intro, detailsHtml });
@@ -110,7 +110,8 @@ export async function sendEmailNotification({
   template = 'generic',
   meta = {}
 }) {
-  await NotificationModel.createNotification({ user_id: userId, title, message, type });
+  const result = await NotificationModel.createNotification({ user_id: userId, title, message, type });
+  console.log('Notification created:', result);
   const user = await getUserById(userId);
   if (!user || !user.email) return { ok: true, email: false };
   const html = renderTemplate(template, { title, message, name: user.name, meta });

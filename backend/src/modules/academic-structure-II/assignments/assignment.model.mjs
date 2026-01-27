@@ -144,7 +144,8 @@ export class AssignmentModel {
 
         return {
             message: 'Profesor asignado exitosamente',
-            assignment_id: result.insertId
+            assignment_id: result.insertId,
+            userId: teacher_user_id
         };
     }
 
@@ -159,6 +160,9 @@ export class AssignmentModel {
 
         if (result.affectedRows === 0) return { error: 'No se encontró la asignación' };
 
-        return { message: 'Asignación eliminada exitosamente' };
+        return { 
+            message: 'Asignación eliminada exitosamente',
+            teacher_user_id: result.teacher_user_id 
+        };
     }
 }

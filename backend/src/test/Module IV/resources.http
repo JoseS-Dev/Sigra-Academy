@@ -11,11 +11,11 @@ Content-Type: multipart/form-data; boundary=--CustomBoundary
 ----CustomBoundary
 Content-Disposition: form-data; name="assignment_id"
 
-1
+4
 ----CustomBoundary
 Content-Disposition: form-data; name="title"
 
-Nuevo Recurso de Prueba
+Nuevo Recurso de Prueba 3
 ----CustomBoundary
 Content-Disposition: form-data; name="resource_type"
 

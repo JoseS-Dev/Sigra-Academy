@@ -124,7 +124,9 @@ export class ResourceModel {
         if(!resourceId) return {error: 'El ID del recurso es requerido'};
         // Se verifica que exista el recurso
         const [existingResource] = await db.query(
-            `SELECT * FROM course_resources WHERE resource_id = ?`,
+            `SELECT res.*, ta.teacher_user_id FROM course_resources res
+            JOIN teacher_assignments ta ON res.assignment_id = ta.assignment_id
+            WHERE res.resource_id = ?`,
             [resourceId]
         );
         if(existingResource.length === 0) return {error: 'El recurso no existe'};
@@ -142,7 +144,8 @@ export class ResourceModel {
             }
         })
         return {
-            message: 'Recurso eliminado exitosamente'
+            message: 'Recurso eliminado exitosamente',
+            teacher_user_id: existingResource[0].teacher_user_id
         }
     }
 }

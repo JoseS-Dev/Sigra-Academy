@@ -47,6 +47,7 @@ export class ResourceController {
             file_path_or_url: req.file.path
         }
         const validation = validateCreateResource(data);
+        console.log(data);
         try{
             if(!validation.success){
                 return res.status(400).json({
@@ -100,6 +101,11 @@ export class ResourceController {
         try{
             const result = await this.model.deleteResource(Number(resourceId));
             if(result.error) return res.status(404).json({error: result.error});
+            res.locals.notify = {
+                userId: result.teacher_user_id,
+                message: `Se ha eliminado un recurso de la asignación.`,
+                type: 'notification'
+            };
             return res.status(200).json({
                 message: result.message
             });

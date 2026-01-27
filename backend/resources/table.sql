@@ -32,6 +32,7 @@ CREATE TABLE role_permissions (
 );
 
 
+
 -- Tabla Maestra de Usuarios (Entidad Fuerte)
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
@@ -42,9 +43,9 @@ CREATE TABLE users (
     email VARCHAR(150) NOT NULL UNIQUE,
     phone VARCHAR(12) NOT NULL,
     password_hash VARCHAR(255) NOT NULL, -- Almacenar hash, nunca texto plano
-    parents_national_id VARCHAR(20),
-    parents_first_name VARCHAR(100),
-    parents_last_name VARCHAR(100), 
+    national_parent_id INT,
+    first_name_parent VARCHAR(100),
+    last_name_parent VARCHAR(100),
     is_active BOOLEAN DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -233,7 +234,7 @@ CREATE TABLE notifications (
     user_id INT NOT NULL, -- Destinatario
     title VARCHAR(100) NOT NULL,
     message TEXT NOT NULL,
-    type ENUM('Alerta', 'Info', 'Academico', 'Recordatorio') DEFAULT 'Info',
+    type ENUM('generic', 'activity', 'warning', 'notification') DEFAULT 'notification',
     is_read BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE

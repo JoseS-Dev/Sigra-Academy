@@ -289,7 +289,8 @@ export class TeacherAssignmentModel {
             [assignmentId]
         );
         return {
-            message: 'Asignación eliminada exitosamente'
+            message: 'Asignación eliminada exitosamente',
+            teacher_user_id: existingAssignment[0].teacher_user_id
         }
     }
 }

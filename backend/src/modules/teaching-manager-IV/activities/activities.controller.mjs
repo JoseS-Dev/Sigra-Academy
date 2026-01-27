@@ -99,6 +99,12 @@ export class ActivitiesController {
             }
             const result = await this.model.createActivity(validation.data);
             if(result.error) return res.status(400).json({error: result.error});
+            res.locals.notify = {
+                userId: result.teacher_user_id,
+                message: `Se ha creado una nueva actividad: ${result.activity.title}`,
+                type: 'notification'
+                
+            }
             return res.status(201).json({
                 message: result.message,
                 activity: result.activity
@@ -139,6 +145,11 @@ export class ActivitiesController {
         try{
             const result = await this.model.deleteActivity(Number(activityId));
             if(result.error) return res.status(404).json({error: result.error});
+            res.locals.notify = {
+                userId: result.teacher_user_id,
+                message: `Se ha eliminado una actividad.`,
+                type: 'notification'
+            }
             return res.status(200).json({
                 message: result.message
             });

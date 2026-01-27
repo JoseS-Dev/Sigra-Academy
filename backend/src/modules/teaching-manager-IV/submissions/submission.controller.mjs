@@ -88,6 +88,11 @@ export class SubmissionController {
             }
             const result = await this.model.createSubmission(Data);
             if(result.error) return res.status(400).json({error: result.error});
+            res.locals.notify = {
+                userId: validation.data.student_user_id,
+                message: `Tu entrega para la actividad ${validation.data.activity_id} ha sido creada exitosamente.`,
+                type: 'notification'
+            };
             return res.status(201).json({
                 message: result.message,
                 submission: result.submission
@@ -131,6 +136,11 @@ export class SubmissionController {
         try{
             const result = await this.model.deleteSubmission(Number(submissionId));
             if(result.error) return res.status(400).json({error: result.error});
+            res.locals.notify = {
+                userId: result.student_user_id,
+                message: `Tu entrega para la actividad ${result.activity_id} ha sido eliminada exitosamente.`,
+                type: 'notification'
+            };
             return res.status(200).json({
                 message: result.message
             });

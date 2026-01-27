@@ -575,6 +575,42 @@ function cargarDatosPerfil() {
     }
 }
 
+// Mejora: mostrar nombre y avatar simplificado, y toggle para mostrar contraseña
+document.addEventListener('DOMContentLoaded', () => {
+    const toggleBtn = document.getElementById('toggle-perf-pass');
+    const passInput = document.getElementById('perf-pass');
+    if (toggleBtn && passInput) {
+        toggleBtn.addEventListener('click', () => {
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                toggleBtn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+            } else {
+                passInput.type = 'password';
+                toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
+            }
+        });
+    }
+
+    // Cuando se carga la página, también actualizar nombre y avatar si hay usuario
+    const user = JSON.parse(localStorage.getItem('sigra_user'));
+    if (user) {
+        const fullnameEl = document.getElementById('perfil-full-name');
+        if (fullnameEl) fullnameEl.textContent = (user.full_name || user.name || user.fullname || 'Profesor');
+
+        const avatarEl = document.getElementById('avatar-large');
+        if (avatarEl) {
+            // Si hay foto en el user (ej. avatar_url), usar imagen; sino usar iniciales
+            if (user.avatar_url) {
+                avatarEl.innerHTML = `<img src="${user.avatar_url}" alt="avatar" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+            } else {
+                const name = (user.full_name || user.name || user.fullname || '').trim();
+                const initials = name ? name.split(' ').map(p => p[0]).slice(0,2).join('').toUpperCase() : '--';
+                avatarEl.textContent = initials;
+            }
+        }
+    }
+});
+
 // --- ACTUALIZACIÓN DE PERFIL (Ruta: /api/auth/update/:id) ---
 document.getElementById('form-perfil-profesor')?.addEventListener('submit', async (e) => {
     e.preventDefault();

@@ -212,7 +212,9 @@ export class SubmissionModel {
             }
         });
         return {
-            message: 'Entrega eliminada exitosamente'
+            message: 'Entrega eliminada exitosamente',
+            student_user_id: existingSubmission[0].student_user_id,
+            activity_id: existingSubmission[0].activity_id
         }
     }
 }

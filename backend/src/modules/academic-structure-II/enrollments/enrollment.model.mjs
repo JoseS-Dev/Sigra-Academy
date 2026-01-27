@@ -171,6 +171,7 @@ export class EnrollmentModel {
         if(deletedEnrollment.affectedRows === 0) return {error: 'No se pudo eliminar la inscripción.'};
         return {
             message: 'Inscripción eliminada exitosamente.',
+            student_user_id: existingEnrollment[0].student_user_id
         }
     }
 }

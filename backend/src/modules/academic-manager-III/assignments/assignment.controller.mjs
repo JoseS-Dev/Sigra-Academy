@@ -115,6 +115,11 @@ export class AssignemtController {
                 });
             }
             const result = await this.assignmentModel.createAssignement(validation.data);
+            res.locals.notify = {
+                userId: result.teacher_user_id,
+                message: 'Has sido asignado a una nueva sección.',
+                type: 'Info'
+            }
             if(result.error) return  res.status(400).json({error: result.error});
             return res.status(201).json({
                 message: result.message,
@@ -155,6 +160,11 @@ export class AssignemtController {
         try{
             const result = await this.assignmentModel.deleteAssignmentByID(assignmentId);
             if(result.error) return  res.status(400).json({error: result.error});
+            res.locals.notify = {
+                userId: result.teacher_user_id,
+                message: "Se ha borrado tu asignación a una sección",
+                type: "notification"
+            }
             return res.status(200).json({
                 message: result.message
             });

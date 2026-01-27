@@ -81,6 +81,11 @@ export class EnrollmentController {
             }
             const result = await this.enrollmentController.createEnrollment(validation.data);
             if(result.error) return res.status(400).json({error: result.error});
+            res.locals.notify = {
+                userId: validation.data.student_user_id,
+                message: 'Tu inscripción ha sido creada exitosamente.',
+                type: 'notification'
+            };
             return res.status(201).json({
                 message: result.message,
                 enrollment: result.enrollment
@@ -120,6 +125,11 @@ export class EnrollmentController {
         try{
             const result = await this.enrollmentController.deleteEnrollment(Number(enrollmentId));
             if(result.error) return res.status(404).json({error: result.error});
+            res.locals.notify = {
+                userId: result.student_user_id,
+                message: "Se ha borrado tu inscripción a una sección",
+                type: "notification"
+            }
             return res.status(200).json({
                 message: result.message
             });
