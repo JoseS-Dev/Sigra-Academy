@@ -2,7 +2,6 @@
 export const usersMock = [
   { user_id: 1, role_id: 1, first_name: 'Admin', last_name: 'One', email: 'admin1@example.com', phone: '6000000001', national_id: '70000001', password_hash: 'hashed_password_1' },
   { user_id: 2, role_id: 1, first_name: 'Admin', last_name: 'Two', email: 'admin2@example.com', phone: '6000000002', national_id: '70000002', password_hash: 'hashed_password_2' },
-  { user_id: 3, role_id: 1, first_name: 'Admin', last_name: 'Three', email: 'admin3@example.com', phone: '6000000003', national_id: '70000003', password_hash: 'hashed_password_3' },
 
   // Teachers 4..168
   { user_id: 4, role_id: 2, first_name: 'Profesor', last_name: 'T1', email: 'teacher1@example.com', phone: '6000000004', national_id: '70000004', password_hash: 'hashed_password_4' },
@@ -216,5 +215,7 @@ export const usersMock = [
   { user_id: 210, role_id: 3, first_name: 'Estudiante', last_name: 'S42', email: 'student42@example.com', phone: '6000000210', national_id: '70000210', password_hash: 'hashed_password_210' },
   { user_id: 211, role_id: 3, first_name: 'Estudiante', last_name: 'S43', email: 'student43@example.com', phone: '6000000211', national_id: '70000211', password_hash: 'hashed_password_211' },
   { user_id: 212, role_id: 3, first_name: 'Estudiante', last_name: 'S44', email: 'student44@example.com', phone: '6000000212', national_id: '70000212', password_hash: 'hashed_password_212' },
-  { user_id: 213, role_id: 3, first_name: 'Estudiante', last_name: 'S45', email: 'student45@example.com', phone: '6000000213', national_id: '70000213', password_hash: 'hashed_password_213' }
+  { user_id: 213, role_id: 3, first_name: 'Estudiante', last_name: 'S45', email: 'student45@example.com', phone: '6000000213', national_id: '70000213', password_hash: 'hashed_password_213' },
+  { user_id: 214, role_id: 4, first_name: 'Control', last_name: 'Estudio1', email: 'control1@example.com', phone: '6000000214', national_id: '70000214', password_hash: 'hashed_password_214' },
+  { user_id: 215, role_id: 4, first_name: 'Control', last_name: 'Estudio2', email: 'control2@example.com', phone: '6000000215', national_id: '70000215', password_hash: 'hashed_password_215' }
 ]
