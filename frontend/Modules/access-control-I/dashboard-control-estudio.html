@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SIGRA | Dashboard Control de Estudio</title>
+    <meta name="description" content="Panel de control administrativo para la gestión académica del colegio" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="../academic-structure-II/css/navbar.css" />
+    <link rel="stylesheet" href="dashboard-control-estudio.css" />
+</head>
+
+<body>
+    <!-- Header con navegación (Identico a Academic Structure-II) -->
+    <header>
+        <nav class="navbar" aria-label="Barra de navegación principal">
+            <a class="brand" aria-label="SIGRA" href="./dashboard-control-estudio.html">
+                <img class="brand-logo" src="../../Public/resources/Modulo-1/logo.png" alt="Logo SIGRA" />
+                <span>SIGRA</span>
+            </a>
+
+            <div class="nav-links" role="list">
+                <a class="active" href="./dashboard-control-estudio.html" role="listitem">Inicio</a>
+                <a href="../academic-structure-II/catalogo-materias/index.html" role="listitem">Catalogo</a>
+                <a href="../academic-structure-II/gestion-materias/index.html" role="listitem">Materias</a>
+                <a href="../academic-structure-II/definicion-prelaciones/index.html" role="listitem">Prelaciones</a>
+                <a href="../academic-structure-II/gestion-horarios/index.html" role="listitem">Horarios</a>
+                <a href="../academic-structure-II/Gestionar Asignaciones/index.html" role="listitem"> Inscripción</a>
+                <a href="../academic-structure-II/Gestionar Asignaciones/gestionar-asignacion.html"
+                    role="listitem">Asignacion</a>
+            </div>
+
+            <div class="profile-menu" aria-label="Menú de perfil">
+                <button class="profile-button" id="profile-button" type="button" aria-haspopup="true"
+                    aria-expanded="false">
+                    <span class="profile-avatar" id="profile-avatar" aria-hidden="true">--</span>
+                    <span class="sr-only">Abrir menú de perfil</span>
+                </button>
+                <div class="profile-dropdown" id="profile-dropdown" role="menu">
+                    <ul class="profile-list" role="menu">
+                        <li class="profile-info" id="profile-info-name" role="presentation">Usuario</li>
+                        <li role="none"><button type="button" class="profile-item" data-profile-action="logout"
+                                role="menuitem">Cerrar sesión</button></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Contenido principal -->
+    <main class="main-content">
+        <div class="content-wrapper">
+
+            <!-- Hero Section -->
+            <section class="welcome-section">
+                <div class="welcome-content">
+                    <h2 class="welcome-title">Bienvenido, Control de Estudio</h2>
+                    <p class="welcome-subtitle">Gestiona las materias, secciones y estructura académica del colegio</p>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card" id="subjects-stat">
+                        <div class="stat-icon stat-icon-primary">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M8 7h8M8 11h5" stroke="currentColor" stroke-width="1.5"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Materias Activas</p>
+                            <p class="stat-value" id="total-subjects">—</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" id="sections-stat">
+                        <div class="stat-icon stat-icon-success">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v-3m0-11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v3m0 0a6 6 0 0 1-6 6m6-6a6 6 0 0 0-6 6m0 0a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 0v-3m-6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v3"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Secciones</p>
+                            <p class="stat-value" id="total-sections">—</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card" id="teachers-stat">
+                        <div class="stat-icon stat-icon-warning">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m21-10v6m-3-3h6M13 7a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="stat-info">
+                            <p class="stat-label">Profesores</p>
+                            <p class="stat-value" id="total-teachers">—</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel de Gestión Académica -->
+            <section class="management-section">
+                <div class="section-header">
+                    <h3 class="section-title">Gestión Académica</h3>
+                    <p class="section-description">Accede a las diferentes herramientas de administración</p>
+                </div>
+
+                <div class="modules-grid">
+                    <!-- Gestión de Materias -->
+                    <a href="../academic-structure-II/gestion-materias/index.html" class="module-card module-primary">
+                        <div class="module-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="module-content">
+                            <h4 class="module-title">Gestión de Materias</h4>
+                            <p class="module-description">Administra las materias del plan de estudios</p>
+                        </div>
+                        <div class="module-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+
+                    <!-- Catálogo de Materias -->
+                    <a href="../academic-structure-II/catalogo-materias/index.html" class="module-card module-success">
+                        <div class="module-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                                <path d="M8 3v4m8-4v4M3 9h18" stroke="currentColor" stroke-width="1.8"
+                                    stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="module-content">
+                            <h4 class="module-title">Catálogo de Materias</h4>
+                            <p class="module-description">Consulta el catálogo completo de materias</p>
+                        </div>
+                        <div class="module-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+
+                    <!-- Definición de Prelaciones -->
+                    <a href="../academic-structure-II/definicion-prelaciones/index.html"
+                        class="module-card module-warning">
+                        <div class="module-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09ZM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2Z"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="module-content">
+                            <h4 class="module-title">Definición de Prelaciones</h4>
+                            <p class="module-description">Establece las prelaciones entre materias</p>
+                        </div>
+                        <div class="module-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+
+                    <!-- Gestión de Horarios -->
+                    <a href="../academic-structure-II/gestion-horarios/index.html" class="module-card module-info">
+                        <div class="module-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8" />
+                                <path d="M12 6v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+                            </svg>
+                        </div>
+                        <div class="module-content">
+                            <h4 class="module-title">Gestión de Horarios</h4>
+                            <p class="module-description">Organiza los horarios de clases</p>
+                        </div>
+                        <div class="module-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+
+                    <!-- Gestionar Asignaciones -->
+                    <a href="../academic-structure-II/Gestionar%20Asignaciones/index.html"
+                        class="module-card module-purple">
+                        <div class="module-icon">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2m14-9a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-6 0a4 4 0 1 1-8 0 4 4 0 0 1 8 0Z"
+                                    stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <div class="module-content">
+                            <h4 class="module-title">Gestionar Asignaciones</h4>
+                            <p class="module-description">Asigna profesores a materias y secciones</p>
+                        </div>
+                        <div class="module-arrow">
+                            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                    </a>
+
+                </div>
+            </section>
+
+            <!-- Tabla de Materias Recientes -->
+            <section class="table-section">
+                <div class="section-header">
+                    <h3 class="section-title">Listado de Materias</h3>
+                    <a href="../academic-structure-II/catalogo-materias/index.html" class="view-all-link">
+                        Ver todas
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="table-container">
+                    <div class="loading-state" id="loading-subjects">
+                        <div class="spinner"></div>
+                        <p>Cargando materias...</p>
+                    </div>
+
+                    <div class="empty-state" id="empty-subjects" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20V2H6.5A2.5 2.5 0 0 0 4 4.5v15Z"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <p>No hay materias registradas</p>
+                    </div>
+
+                    <table class="data-table" id="subjects-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Año</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="subjects-tbody">
+                            <!-- Datos cargados dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Tabla de Secciones -->
+            <section class="table-section">
+                <div class="section-header">
+                    <h3 class="section-title">Secciones del Colegio</h3>
+                    <a href="../academic-structure-II/Gestionar Asignaciones/index.html" class="view-all-link">
+                        Gestionar
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m9 18 6-6-6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                    </a>
+                </div>
+
+                <div class="table-container">
+                    <div class="loading-state" id="loading-sections">
+                        <div class="spinner"></div>
+                        <p>Cargando secciones...</p>
+                    </div>
+
+                    <div class="empty-state" id="empty-sections" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M18 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v-3m0-11a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v3m0 0a6 6 0 0 1-6 6m6-6a6 6 0 0 0-6 6m0 0a3 3 0 1 0 0 6 3 3 0 0 0 0-6Zm0 0v-3m-6-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm0 0v3"
+                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" />
+                        </svg>
+                        <p>No hay secciones registradas</p>
+                    </div>
+
+                    <table class="data-table" id="sections-table" style="display: none;">
+                        <thead>
+                            <tr>
+                                <th>Grado</th>
+                                <th>Sección</th>
+                                <th>Capacidad</th>
+                                <th>Año Escolar</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sections-tbody">
+                            <!-- Datos cargados dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        (function () {
+            const API_BASE = 'http://localhost:5200/api';
+
+            // Fetch subjects
+            async function loadSubjects() {
+                const loadingEl = document.getElementById('loading-subjects');
+                const emptyEl = document.getElementById('empty-subjects');
+                const tableEl = document.getElementById('subjects-table');
+                const tbody = document.getElementById('subjects-tbody');
+                const totalEl = document.getElementById('total-subjects');
+
+                try {
+                    const response = await fetch(`${API_BASE}/subjects`);
+                    if (!response.ok) throw new Error('Error al cargar materias');
+
+                    const data = await response.json();
+                    const subjects = Array.isArray(data) ? data : (data.subjects || []);
+
+                    loadingEl.style.display = 'none';
+
+                    if (subjects.length === 0) {
+                        emptyEl.style.display = 'flex';
+                        totalEl.textContent = '0';
+                        return;
+                    }
+
+                    // Update stats (still counting active for the counter above if desired, or total)
+                    const activeCount = subjects.filter(s => s.is_active == 1 || s.is_active === true).length;
+                    totalEl.textContent = activeCount;
+
+                    // Show first 10 subjects regardless of status
+                    const displaySubjects = subjects.slice(0, 10);
+
+                    tbody.innerHTML = displaySubjects.map(subject => {
+                        const code = subject.code_subject || subject.codigo || subject.code || 'N/A';
+                        const name = subject.subject_name || subject.name || subject.nombre || 'Sin nombre';
+                        const anio = subject.anio || subject.grade_name || subject.grado || '1° año';
+                        const isActive = subject.is_active == 1 || subject.is_active === true || subject.isActive === true || subject.status === 'active';
+
+                        return `
+                        <tr>
+                            <td><span class="badge badge-secondary">${code}</span></td>
+                            <td class="font-semibold">${name}</td>
+                            <td>${anio}</td>
+                            <td>
+                                <span class="badge ${isActive ? 'badge-success' : 'badge-inactive'}">
+                                    ${isActive ? 'Activo' : 'Inactivo'}
+                                </span>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                    tableEl.style.display = 'table';
+                } catch (error) {
+                    console.error('Error loading subjects:', error);
+                    loadingEl.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <p>Error al cargar las materias</p>
+          `;
+                    totalEl.textContent = '—';
+                }
+            }
+
+            // Fetch sections
+            async function loadSections() {
+                const loadingEl = document.getElementById('loading-sections');
+                const emptyEl = document.getElementById('empty-sections');
+                const tableEl = document.getElementById('sections-table');
+                const tbody = document.getElementById('sections-tbody');
+                const totalEl = document.getElementById('total-sections');
+
+                try {
+                    const response = await fetch(`${API_BASE}/sections/all`);
+                    if (!response.ok) throw new Error('Error al cargar secciones');
+
+                    const data = await response.json();
+                    const sections = Array.isArray(data) ? data : (data.sections || []);
+
+                    loadingEl.style.display = 'none';
+
+                    if (sections.length === 0) {
+                        emptyEl.style.display = 'flex';
+                        totalEl.textContent = '0';
+                        return;
+                    }
+
+                    // Update stats
+                    totalEl.textContent = sections.length;
+
+                    // Show only first 10
+                    const displaySections = sections.slice(0, 10);
+
+                    tbody.innerHTML = displaySections.map(section => {
+                        const grade = section.grade_name || section.grade || section.grado || '—';
+                        const sectionName = section.section_name || section.section || section.seccion || '—';
+                        const capacity = section.capacity || section.capacidad || '—';
+                        // Cálculo dinámico del Periodo Académico (Frontend Only)
+                        const now = new Date();
+                        const currentYear = now.getFullYear();
+                        const academicYear = now.getMonth() >= 7 ? `${currentYear}-${currentYear + 1}` : `${currentYear - 1}-${currentYear}`;
+
+                        // Para secciones, si no viene is_active, asumimos activo porque el API filtra por año activo
+                        const isActive = section.is_active !== undefined ? (section.is_active == 1 || section.is_active === true) : true;
+
+                        return `
+                        <tr>
+                            <td class="font-semibold">${grade}</td>
+                            <td><span class="badge badge-primary">${sectionName}</span></td>
+                            <td>${capacity}</td>
+                            <td>${academicYear}</td>
+                            <td>
+                                <span class="badge ${isActive ? 'badge-success' : 'badge-inactive'}">
+                                    ${isActive ? 'Activa' : 'Inactiva'}
+                                </span>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('');
+
+                    tableEl.style.display = 'table';
+                } catch (error) {
+                    console.error('Error loading sections:', error);
+                    loadingEl.innerHTML = `
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 8v4m0 4h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <p>Error al cargar las secciones</p>
+          `;
+                    totalEl.textContent = '—';
+                }
+            }
+
+            // Fetch teachers count
+            async function loadTeachersCount() {
+                const totalEl = document.getElementById('total-teachers');
+                try {
+                    const response = await fetch(`${API_BASE}/auth/users`);
+                    if (!response.ok) throw new Error('Error');
+
+                    const data = await response.json();
+                    const users = Array.isArray(data) ? data : (data.users || []);
+                    // Filter only teachers (role_id = 2)
+                    const teachers = users.filter(user => user.role_id === 2);
+                    totalEl.textContent = teachers.length;
+                } catch (error) {
+                    console.error('Error loading teachers:', error);
+                    totalEl.textContent = '—';
+                }
+            }
+
+            // Initialize
+            loadSubjects();
+            loadSections();
+            loadTeachersCount();
+        })();
+    </script>
+    <script src="../academic-structure-II/js/navbar.js"></script>
+</body>
+
+</html>
