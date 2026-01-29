@@ -18,6 +18,7 @@
   <title>SIGRA | Crear Cuenta</title>
   <link rel="stylesheet" href="login.css" />
   <link rel="stylesheet" href="registro.css" />
+  <link rel="stylesheet" href="user-table.css" />
   <!-- navbar/back-button styling is handled in registro.css -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -232,6 +233,350 @@
 
   <script src="registro-navbar.js"></script>
   <script src="registro.js"></script>
+
+  <!-- Modal de usuario (igual que en user-table) -->
+  <div id="user-modal-overlay" class="modal-overlay"></div>
+  <div id="user-modal" class="modal" style="max-width: 420px; min-width: 320px; width: 90vw; max-height: 80vh; overflow-y: auto;">
+    <div class="modal-header">
+      <h2 id="user-modal-title">Detalle de usuario</h2>
+      <button id="modal-close" type="button" aria-label="Cerrar" class="icon-link">✕</button>
+    </div>
+    <div class="modal-body">
+      <label>
+        Nombre
+        <input id="modal-first_name" type="text" />
+      </label>
+      <label>
+        Apellido
+        <input id="modal-last_name" type="text" />
+      </label>
+      <label>
+        Cédula
+        <input id="modal-national_id" type="text" inputmode="numeric" />
+      </label>
+      <label>
+        Correo
+        <input id="modal-email" type="email" />
+      </label>
+      <div id="representative-inline-fields" style="display:none; margin-top: 8px;">
+        <label>
+          Cédula del representante
+          <input id="modal-parents_national_id-top" type="text" inputmode="numeric" />
+        </label>
+        <label>
+          Nombre del representante
+          <input id="modal-parents_first_name-top" type="text" />
+        </label>
+        <label>
+          Apellido del representante
+          <input id="modal-parents_last_name-top" type="text" />
+        </label>
+      </div>
+      <label>
+        Contraseña (opcional)
+        <input id="modal-password" type="password" placeholder="Dejar en blanco para no cambiar" autocomplete="new-password" />
+      </label>
+      <label>
+        Confirmar Contraseña
+        <input id="modal-confirm-password" type="password" placeholder="Repite la contraseña" autocomplete="new-password" />
+      </label>
+      <label>
+        Teléfono
+        <input id="modal-phone" type="tel" />
+      </label>
+      <label>
+        Rol
+        <select id="modal-role_id">
+          <option value="2">Profesor</option>
+          <option value="3">Estudiante</option>
+          <option value="4">Control de Estudios</option>
+          <option value="1" disabled>Administrador (solo lectura)</option>
+        </select>
+      </label>
+      <div id="representative-fields" style="display:none; margin-top: 8px;">
+        <label>
+          Cédula del representante
+          <input id="modal-parents_national_id" type="text" inputmode="numeric" />
+        </label>
+        <label>
+          Nombre del representante
+          <input id="modal-parents_first_name" type="text" />
+        </label>
+        <label>
+          Apellido del representante
+          <input id="modal-parents_last_name" type="text" />
+        </label>
+      </div>
+      <label class="switch-line">
+        <span>Activo</span>
+        <input id="modal-is_active" type="checkbox" />
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button id="modal-save" type="button" class="primary-button">Guardar</button>
+    </div>
+  </div>
+
+  <script>
+    // Modal de perfil: mismas validaciones y campos que user-table
+    document.addEventListener('DOMContentLoaded', () => {
+      const API_BASE = 'http://localhost:5200/api/auth'
+      let currentUser = null
+
+      function getAuthHeaders() {
+        const token = localStorage.getItem('sigra_token') || ''
+        return token ? { Authorization: `Bearer ${token}` } : {}
+      }
+
+      function getStoredUser() {
+        const raw = localStorage.getItem('sigra_user')
+        if (!raw) return null
+        try { return JSON.parse(raw) } catch (_) { return null }
+      }
+
+      function getLoggedRoleId() {
+        const u = getStoredUser() || {}
+        const rid = u.role_id ?? (u.role && u.role.role_id)
+        return Number(rid) || null
+      }
+
+      function ensureRoleOption(selectEl, roleId) {
+        const ROLE_LABELS = { 1:'Administrador', 2:'Docente', 3:'Estudiante', 4:'Control de Estudios' }
+        if (!selectEl || roleId === undefined || roleId === null) return
+        const roleValue = String(roleId)
+        const exists = Array.from(selectEl.options).some((opt) => opt.value === roleValue)
+        if (!exists) {
+          const opt = document.createElement('option')
+          opt.value = roleValue
+          opt.textContent = ROLE_LABELS[roleId] || `Rol ${roleValue}`
+          if (roleValue === '1') opt.disabled = true
+          selectEl.appendChild(opt)
+        }
+      }
+
+      window.openModal = function(user, mode = 'view') {
+        const loggedRoleId = getLoggedRoleId()
+        const userRoleId = Number(user.role_id)
+        if (loggedRoleId === 4 && userRoleId === 2 && mode === 'edit') {
+          mode = 'view'
+        }
+        const modal = document.getElementById('user-modal')
+        const overlay = document.getElementById('user-modal-overlay')
+        const title = document.getElementById('user-modal-title')
+        const fields = ['first_name', 'last_name', 'national_id', 'email', 'phone', 'role_id', 'is_active']
+
+        currentUser = user
+        title.textContent = mode === 'edit' ? 'Editar usuario' : 'Ver usuario'
+
+        fields.forEach((field) => {
+          const input = document.getElementById(`modal-${field}`)
+          if (!input) return
+          const value = user[field]
+          if (input.type === 'checkbox') {
+            input.checked = Boolean(value ?? true)
+            input.disabled = mode === 'view'
+          } else if (input.tagName === 'SELECT') {
+            ensureRoleOption(input, value)
+            input.value = value ?? ''
+            const isAdmin = Number(value) === 1
+            const lockRoleChange = mode === 'edit'
+            input.disabled = mode === 'view' || isAdmin || lockRoleChange
+          } else {
+            input.value = value ?? ''
+            input.disabled = mode === 'view'
+          }
+        })
+
+        const isStudent = Number(user.role_id) === 3
+        const repWrap = document.getElementById('representative-inline-fields')
+        const repNationalTop = document.getElementById('modal-parents_national_id-top')
+        const repFirstTop = document.getElementById('modal-parents_first_name-top')
+        const repLastTop = document.getElementById('modal-parents_last_name-top')
+        if (repWrap && repNationalTop && repFirstTop && repLastTop) {
+          if (isStudent) {
+            repWrap.style.display = 'block'
+            repNationalTop.value = user.parents_national_id ?? ''
+            repFirstTop.value = user.parents_first_name ?? ''
+            repLastTop.value = user.parents_last_name ?? ''
+            const disabled = (mode === 'view')
+            repNationalTop.disabled = disabled
+            repFirstTop.disabled = disabled
+            repLastTop.disabled = disabled
+          } else {
+            repWrap.style.display = 'none'
+            repNationalTop.value = ''
+            repFirstTop.value = ''
+            repLastTop.value = ''
+          }
+        }
+
+        const pwdInput = document.getElementById('modal-password')
+        if (pwdInput) { pwdInput.value = ''; pwdInput.disabled = mode === 'view' }
+        const confirmPwdInput = document.getElementById('modal-confirm-password')
+        if (confirmPwdInput) { confirmPwdInput.value = ''; confirmPwdInput.disabled = mode === 'view' }
+
+        modal.dataset.mode = mode
+        modal.classList.add('open')
+        overlay.classList.add('open')
+      }
+
+      window.closeModal = function() {
+        const modal = document.getElementById('user-modal')
+        const overlay = document.getElementById('user-modal-overlay')
+        modal.classList.remove('open')
+        overlay.classList.remove('open')
+      }
+
+      async function saveUser() {
+        const modal = document.getElementById('user-modal')
+        if (modal.dataset.mode !== 'edit' || !currentUser?.user_id) {
+          window.closeModal()
+          return
+        }
+
+        const selectedRoleId = Number(document.getElementById('modal-role_id').value) || currentUser.role_id
+
+        const firstName = document.getElementById('modal-first_name').value.trim()
+        const lastName = document.getElementById('modal-last_name').value.trim()
+        const email = document.getElementById('modal-email').value.trim()
+        const nationalIdRaw = document.getElementById('modal-national_id').value.trim()
+        const phoneRaw = document.getElementById('modal-phone').value.trim()
+        const digitsOnlyNationalId = (nationalIdRaw || '').replace(/\D/g, '')
+        const digitsOnlyPhone = (phoneRaw || '').replace(/\D/g, '')
+
+        if (!firstName || !lastName || !email || !phoneRaw || !nationalIdRaw) {
+          alert('Por favor completa todos los campos requeridos.')
+          return
+        }
+        if (!/^[0-9]{8}$/.test(digitsOnlyNationalId)) {
+          alert('La cédula del usuario debe tener exactamente 8 dígitos.')
+          return
+        }
+        if (!/^[0-9]{11}$/.test(digitsOnlyPhone)) {
+          alert('El número de teléfono debe tener exactamente 11 dígitos.')
+          return
+        }
+
+        const payload = {
+          first_name: firstName,
+          last_name: lastName,
+          national_id: digitsOnlyNationalId,
+          email,
+          phone: digitsOnlyPhone,
+          role_id: selectedRoleId,
+          is_active: document.getElementById('modal-is_active').checked
+        }
+
+        const repNationalTop = document.getElementById('modal-parents_national_id-top')
+        const repFirstTop = document.getElementById('modal-parents_first_name-top')
+        const repLastTop = document.getElementById('modal-parents_last_name-top')
+        const repNationalVal = (repNationalTop?.value || '').trim()
+        const repFirstVal = (repFirstTop?.value || '').trim()
+        const repLastVal = (repLastTop?.value || '').trim()
+
+        if (selectedRoleId === 3) {
+          const digitsOnlyRepNationalId = (repNationalVal || '').replace(/\D/g, '')
+          if (!repFirstVal || !repLastVal || !repNationalVal) {
+            alert('Completa todos los datos del representante.')
+            return
+          }
+          if (!/^[0-9]{8}$/.test(digitsOnlyRepNationalId)) {
+            alert('La cédula del representante debe tener exactamente 8 dígitos.')
+            return
+          }
+          payload.parents_national_id = String(Number(digitsOnlyRepNationalId))
+          payload.parents_first_name = repFirstVal
+          payload.parents_last_name = repLastVal
+        } else {
+          payload.parents_national_id = null
+          payload.parents_first_name = null
+          payload.parents_last_name = null
+        }
+
+        const newPassword = (document.getElementById('modal-password')?.value || '').trim()
+        const confirmPassword = (document.getElementById('modal-confirm-password')?.value || '').trim()
+        if (newPassword) {
+          if (!confirmPassword) { alert('Confirma la contraseña.'); return }
+          if (newPassword !== confirmPassword) { alert('Las contraseñas no coinciden.'); return }
+          if (newPassword.length < 8 || newPassword.length > 20) { alert('La contraseña debe tener entre 8 y 20 caracteres.'); return }
+          const pwdRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-_+\*\/\?]).+$/
+          if (!pwdRegex.test(newPassword)) { alert('La contraseña debe contener al menos: una letra mayúscula, una letra minúscula, un número y uno de los caracteres permitidos: - _ + * / ?'); return }
+          payload.password_hash = newPassword
+        }
+
+        const curFirst = currentUser.first_name || ''
+        const curLast = currentUser.last_name || ''
+        const curEmail = currentUser.email || ''
+        const curNational = String(currentUser.national_id || '').replace(/\D/g, '')
+        const curPhone = String(currentUser.phone || '').replace(/\D/g, '')
+        const curRoleId = Number(currentUser.role_id)
+        const curIsActive = Boolean(currentUser.is_active)
+        const curRepNat = String(currentUser.parents_national_id || '').replace(/\D/g, '')
+        const curRepFirst = currentUser.parents_first_name || ''
+        const curRepLast = currentUser.parents_last_name || ''
+
+        const changed = (
+          payload.first_name !== curFirst ||
+          payload.last_name !== curLast ||
+          payload.national_id !== curNational ||
+          payload.email !== curEmail ||
+          payload.phone !== curPhone ||
+          Number(payload.role_id) !== curRoleId ||
+          Boolean(payload.is_active) !== curIsActive ||
+          (Number(payload.role_id) === 3 && (
+            (String(payload.parents_national_id || '').replace(/\D/g, '') !== curRepNat) ||
+            (payload.parents_first_name || '') !== curRepFirst ||
+            (payload.parents_last_name || '') !== curRepLast
+          )) ||
+          (Number(currentUser.role_id) === 3 && Number(payload.role_id) !== 3 && (
+            (curRepNat || '') !== '' || (curRepFirst || '') !== '' || (curRepLast || '') !== ''
+          )) ||
+          Boolean(newPassword)
+        )
+
+        if (!changed) { alert('No hay cambios para guardar.'); return }
+
+        const ok = window.confirm('¿Estas seguro que quieres modificar este usuario?')
+        if (!ok) return
+
+        try {
+          const response = await fetch(`${API_BASE}/update/${currentUser.user_id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', ...getAuthHeaders() },
+            body: JSON.stringify(payload)
+          })
+          if (!response.ok) {
+            const err = await response.json().catch(() => ({}))
+            throw new Error(err.error || 'No se pudo actualizar el usuario')
+          }
+          // Si el usuario editado es el logueado, actualizar localStorage
+          let apiData = null
+          try { apiData = await response.json() } catch (_) {}
+          const updatedFromApi = apiData?.user ?? apiData?.data ?? null
+          const storedRaw = localStorage.getItem('sigra_user')
+          let stored = null
+          try { stored = storedRaw ? JSON.parse(storedRaw) : null } catch(_) { stored = null }
+          const storedId = stored?.id || stored?.user_id
+          if (storedId && String(storedId) === String(currentUser.user_id)) {
+            const merged = { ...(stored || {}), ...(currentUser || {}), ...payload }
+            if (updatedFromApi && (updatedFromApi.id || updatedFromApi.user_id)) {
+              Object.assign(merged, updatedFromApi)
+            }
+            localStorage.setItem('sigra_user', JSON.stringify(merged))
+            if (typeof window.setProfileUI === 'function') window.setProfileUI()
+          }
+          window.closeModal()
+        } catch (error) {
+          alert(error.message)
+          console.error('Error al actualizar usuario:', error)
+        }
+      }
+
+      document.getElementById('modal-close')?.addEventListener('click', window.closeModal)
+      document.getElementById('user-modal-overlay')?.addEventListener('click', window.closeModal)
+      document.getElementById('modal-save')?.addEventListener('click', saveUser)
+    })
+  </script>
 </body>
 
 </html>

@@ -533,12 +533,35 @@
 
         const selectedRoleId = Number(document.getElementById('modal-role_id').value) || currentUser.role_id
 
+        // Captura y normalización de campos base
+        const firstName = document.getElementById('modal-first_name').value.trim()
+        const lastName = document.getElementById('modal-last_name').value.trim()
+        const email = document.getElementById('modal-email').value.trim()
+        const nationalIdRaw = document.getElementById('modal-national_id').value.trim()
+        const phoneRaw = document.getElementById('modal-phone').value.trim()
+        const digitsOnlyNationalId = (nationalIdRaw || '').replace(/\D/g, '')
+        const digitsOnlyPhone = (phoneRaw || '').replace(/\D/g, '')
+
+        // Validaciones equivalentes al registro
+        if (!firstName || !lastName || !email || !phoneRaw || !nationalIdRaw) {
+          alert('Por favor completa todos los campos requeridos.')
+          return
+        }
+        if (!/^[0-9]{8}$/.test(digitsOnlyNationalId)) {
+          alert('La cédula del usuario debe tener exactamente 8 dígitos.')
+          return
+        }
+        if (!/^[0-9]{11}$/.test(digitsOnlyPhone)) {
+          alert('El número de teléfono debe tener exactamente 11 dígitos.')
+          return
+        }
+
         const payload = {
-          first_name: document.getElementById('modal-first_name').value.trim(),
-          last_name: document.getElementById('modal-last_name').value.trim(),
-          national_id: document.getElementById('modal-national_id').value.trim(),
-          email: document.getElementById('modal-email').value.trim(),
-          phone: document.getElementById('modal-phone').value.trim(),
+          first_name: firstName,
+          last_name: lastName,
+          national_id: digitsOnlyNationalId,
+          email,
+          phone: digitsOnlyPhone,
           role_id: selectedRoleId,
           is_active: document.getElementById('modal-is_active').checked
         }
@@ -552,9 +575,19 @@
         const repLastVal = (repLastTop?.value || '').trim()
 
         if (selectedRoleId === 3) {
-          payload.parents_national_id = repNationalVal || ''
-          payload.parents_first_name = repFirstVal || ''
-          payload.parents_last_name = repLastVal || ''
+          // Validaciones de representante (obligatorias para estudiantes)
+          const digitsOnlyRepNationalId = (repNationalVal || '').replace(/\D/g, '')
+          if (!repFirstVal || !repLastVal || !repNationalVal) {
+            alert('Completa todos los datos del representante.')
+            return
+          }
+          if (!/^[0-9]{8}$/.test(digitsOnlyRepNationalId)) {
+            alert('La cédula del representante debe tener exactamente 8 dígitos.')
+            return
+          }
+          payload.parents_national_id = String(Number(digitsOnlyRepNationalId))
+          payload.parents_first_name = repFirstVal
+          payload.parents_last_name = repLastVal
         } else {
           // Si deja de ser estudiante, limpiar campos en backend
           payload.parents_national_id = null
@@ -586,25 +619,37 @@
         }
 
         // Detectar cambios respecto al usuario actual
+        // Normalización para comparación justa (evita falsos negativos por formateo)
+        const curFirst = currentUser.first_name || ''
+        const curLast = currentUser.last_name || ''
+        const curEmail = currentUser.email || ''
+        const curNational = String(currentUser.national_id || '').replace(/\D/g, '')
+        const curPhone = String(currentUser.phone || '').replace(/\D/g, '')
+        const curRoleId = Number(currentUser.role_id)
+        const curIsActive = Boolean(currentUser.is_active)
+        const curRepNat = String(currentUser.parents_national_id || '').replace(/\D/g, '')
+        const curRepFirst = currentUser.parents_first_name || ''
+        const curRepLast = currentUser.parents_last_name || ''
+
         const changed = (
-          payload.first_name !== (currentUser.first_name || '') ||
-          payload.last_name !== (currentUser.last_name || '') ||
-          payload.national_id !== (currentUser.national_id || '') ||
-          payload.email !== (currentUser.email || '') ||
-          payload.phone !== (currentUser.phone || '') ||
-          Number(payload.role_id) !== Number(currentUser.role_id) ||
-          Boolean(payload.is_active) !== Boolean(currentUser.is_active) ||
+          payload.first_name !== curFirst ||
+          payload.last_name !== curLast ||
+          payload.national_id !== curNational ||
+          payload.email !== curEmail ||
+          payload.phone !== curPhone ||
+          Number(payload.role_id) !== curRoleId ||
+          Boolean(payload.is_active) !== curIsActive ||
           // Cambios en datos del representante
           (Number(payload.role_id) === 3 && (
-            (payload.parents_national_id || '') !== (currentUser.parents_national_id || '') ||
-            (payload.parents_first_name || '') !== (currentUser.parents_first_name || '') ||
-            (payload.parents_last_name || '') !== (currentUser.parents_last_name || '')
+            (String(payload.parents_national_id || '').replace(/\D/g, '') !== curRepNat) ||
+            (payload.parents_first_name || '') !== curRepFirst ||
+            (payload.parents_last_name || '') !== curRepLast
           )) ||
           // Si deja de ser estudiante y tenía datos de representante, también cuenta como cambio
           (Number(currentUser.role_id) === 3 && Number(payload.role_id) !== 3 && (
-            (currentUser.parents_national_id || '') !== '' ||
-            (currentUser.parents_first_name || '') !== '' ||
-            (currentUser.parents_last_name || '') !== ''
+            (curRepNat || '') !== '' ||
+            (curRepFirst || '') !== '' ||
+            (curRepLast || '') !== ''
           )) ||
           Boolean(newPassword)
         )
@@ -630,6 +675,20 @@
           if (!response.ok) {
             const err = await response.json().catch(() => ({}))
             throw new Error(err.error || 'No se pudo actualizar el usuario')
+          }
+          // Si el usuario editado es el logueado, actualizar localStorage
+          let apiData = null
+          try { apiData = await response.json() } catch (_) {}
+          const updatedFromApi = apiData?.user ?? apiData?.data ?? null
+          const stored = getStoredUser()
+          const storedId = stored?.id || stored?.user_id
+          if (storedId && String(storedId) === String(currentUser.user_id)) {
+            const merged = { ...(stored || {}), ...(currentUser || {}), ...payload }
+            if (updatedFromApi && (updatedFromApi.id || updatedFromApi.user_id)) {
+              Object.assign(merged, updatedFromApi)
+            }
+            localStorage.setItem('sigra_user', JSON.stringify(merged))
+            if (typeof setProfileUI === 'function') setProfileUI()
           }
 
           await loadUsers()
